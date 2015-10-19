@@ -1,5 +1,6 @@
-# 210
+# Backpack
 Web App project for CSC 210
+
 Mario Natalino and Gianna Macri
 
 Target Audience: Students

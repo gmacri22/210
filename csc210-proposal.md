@@ -10,4 +10,4 @@ Right now, to store and organize all of these resources, from youtube videos to 
 
 Meeting the project requirements: The application will allow users to create an account to store and organize their personal resources on the server and read, update, and delete them as desired. It will use Ajax so that they can do this without reloading the entire page.
 
-Beyond the minimum requirements, we want to use Websockets to allow users to communicate with one another in real time.
+Beyond the minimum requirements, we want to use Websockets to allow users to communicate with one another in real time. They will be able to chat with other single users or create groups, such as a class group or a project group, to chat and share resources.

@@ -1,0 +1,91 @@
+<html>
+
+<!--
+Lectures 11 and 12 - CSC 210 Fall 2015
+Philip Guo
+-->
+
+<head>
+<title>Backpack Login</title>
+
+<script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function() {
+  // define a generic Ajax error handler:
+  // http://api.jquery.com/ajaxerror/
+  $(document).ajaxError(function() {
+    alert("Sorry, there was a problem!");
+  });
+  $("#createButton").click(function() {
+    $.ajax({
+      // The URL for the request -- note the simple REST API!
+      // all URLs are relative to http://localhost:3000/
+      url: "login/",
+      type: "POST",
+      dataType : "text", // this URL returns a plain text string, not JSON
+      data : { username: $("#nameBox").val(),
+               password: $("#passwordBox").val()
+             },
+      success: function( data ) {
+        console.log("You received some data!", data);
+        if (data == 'OK') {
+          $("#status").html("Successfully created a new user!");
+        } else {
+          $("#status").html("Error: could not create a new user!");
+        }
+      },
+    });
+  });
+  $("#readButton").click(function() {
+    // From: http://learn.jquery.com/ajax/jquery-ajax-methods/
+    // Using the core $.ajax() method
+    $.ajax({
+      // The URL for the request -- note the simple REST API!
+      // all URLs are relative to http://localhost:3000/
+      url: "login/" + $("#nameBox").val() + "&"+$("#passwordBox").val(),
+      type: "GET",
+      dataType : "json", // this URL returns data in JSON format
+      success: function( data ) {
+        console.log("You received some data!", data);
+        if (data.username && data.password) {
+          $("#nameDiv").html("My name is " + data.username);
+          $("#ageDiv").html("My password is " + data.password);
+          window.location.replace("http://localhost:3000/fakebook.html");
+        } else {
+          $("#status").html("Error: could not find user!");
+          // clear the profile display
+          $("#nameDiv").html("");
+          $("#ageDiv").html("");
+          $("#profileImage").attr("src", "");
+        }
+      },
+    });
+
+  });
+});
+</script>
+
+</head>
+  <body>
+  <h1>Backpack</h1>
+
+    <p>
+    Username: <input id="nameBox" type="text" size="20"/>
+    Password: <input id="passwordBox" type="text" size="20"/>
+    </p>
+
+    <p>
+    <button id="createButton">Create an account</button>
+    <button id="readButton">Login</button>
+    </p>
+
+    <!-- empty placeholders -->
+    <div id="nameDiv"></div>
+    <div id="ageDiv"></div>
+
+    <hr/>
+
+    <div id="status"></div>
+  </body>
+</html>

@@ -1,10 +1,4 @@
 <html>
-
-<!--
-Lectures 11 and 12 - CSC 210 Fall 2015
-Philip Guo
--->
-
 <head>
 <title>Backpack Login</title>
 
@@ -37,7 +31,7 @@ $(document).ready(function() {
       },
     });
   });
-  $("#readButton").click(function() {
+  $("#loginButton").click(function() {
     // From: http://learn.jquery.com/ajax/jquery-ajax-methods/
     // Using the core $.ajax() method
     $.ajax({
@@ -50,13 +44,13 @@ $(document).ready(function() {
         console.log("You received some data!", data);
         if (data.username && data.password) {
           $("#nameDiv").html("My name is " + data.username);
-          $("#ageDiv").html("My password is " + data.password);
-          window.location.replace("http://localhost:3000/fakebook.html");
+          $("#passDiv").html("My password is " + data.password);
+          window.location.replace("http://localhost:3000/backpack.html");
         } else {
           $("#status").html("Error: could not find user!");
           // clear the profile display
           $("#nameDiv").html("");
-          $("#ageDiv").html("");
+          $("#passDiv").html("");
           $("#profileImage").attr("src", "");
         }
       },
@@ -77,12 +71,12 @@ $(document).ready(function() {
 
     <p>
     <button id="createButton">Create an account</button>
-    <button id="readButton">Login</button>
+    <button id="loginButton">Login</button>
     </p>
 
     <!-- empty placeholders -->
     <div id="nameDiv"></div>
-    <div id="ageDiv"></div>
+    <div id="passDiv"></div>
 
     <hr/>
 

@@ -1,6 +1,4 @@
 var express = require('express');
-var sql = require('sql');
-sql.setDialect('sqlite');
 var app = express();
 
 var fs = require("fs");
@@ -31,7 +29,7 @@ app.use(express.static('static_files'));
 
 // CREATE a new user
 
-app.post('/users', function (req, res) {
+app.post('/login', function (req, res) {
   var postBody = req.body;
   var myName = postBody.username;
   var myPassword = postBody.password;
@@ -62,6 +60,7 @@ app.post('/users', function (req, res) {
 
 app.get('/users/*', function (req, res) {
   var nameToLookup = req.params[0]; // this matches the '*' part of '/users/*' above
+  var passToLookup = req.params[1];
   db.get('SELECT * FROM users WHERE username = \'' + nameToLookup+'\'', function(err, row){
    if(row===undefined){
       res.send('{}');
@@ -72,6 +71,22 @@ app.get('/users/*', function (req, res) {
   //res.send('{}'); // failed, so return an empty JSON object!
 });
 
+app.get('/login/*', function (req, res) {
+  var userToLookup = req.params[0].split("&"); 
+  var nameToLookup = userToLookup[0];
+  var passToLookup = userToLookup[1];
+  console.log(nameToLookup);
+  console.log(passToLookup);
+  db.get('SELECT * FROM users WHERE username = \'' + nameToLookup+'\' AND password =  \''+ passToLookup + '\'', function(err, row){
+   if(row===undefined){
+      res.send('{}');
+    } else {
+      res.send('{"username":"'+row.username+'", "password":"'+row.password+'"}'); 
+      
+    }
+   });
+  //res.send('{}'); // failed, so return an empty JSON object!
+});
 
 /*
 // UPDATE a user's profile with the data given in POST

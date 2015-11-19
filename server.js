@@ -1,13 +1,3 @@
-/* TRYING TO FIGURE OUT WHAT GIT IS DOING
- * Authors: Gianna Macri, Mario Natalino
- * Project: Backpack
- * Last updated: 2015 November 19
- */
-
-// Declarations:
-// Express for http server, 
-// fs and sqlite3 for storing and manipulating data on server
-
 var express = require('express');
 var app = express();
 
@@ -18,34 +8,39 @@ var exists = fs.existsSync(file);
 var sqlite3 = require("sqlite3").verbose();
 var db = new sqlite3.Database(file);
 
-// Creates users database if there isn't one 
 if(!exists){
-  console.log("Could not find users database: creating a new one");
+  console.log("creating db file");
   fs.openSync(file, "w");
 }
 
-// For parsing POST request bodies
+// required to support parsing of POST request bodies
 var bodyParser = require('body-parser');
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json()); // support json encoded bodies
+app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 
-// Declaring location of static files 
+// put all of your static files (e.g., HTML, CSS, JS, JPG) in the static_files/
+// sub-directory, and the server will serve them from there. e.g.,:
+//
+// http://localhost:3000/fakebook.html
+// http://localhost:3000/cat.jpg
+//
+// will send the file static_files/cat.jpg to the user's Web browser
 app.use(express.static('static_files'));
 
-// REQUESTS TO /LOGIN
-// Create a new user
+// CREATE a new user
+
 app.post('/login', function (req, res) {
   var postBody = req.body;
   var myName = postBody.username;
   var myPassword = postBody.password;
 
-  // Require username and password 
-  if (!myName | !myPassword) {
+  // must have a name!
+  if (!myName) {
     res.send('ERROR');
-    return; 
+    return; // return early!
   }
 
-  // Check if user's name is already in database; if so, send an error
+  // check if user's name is already in database; if so, send an error
   db.get('SELECT * FROM users WHERE username = \'' + myName+'\'', function(err, row){
    if(!(row===undefined)){
     res.send('ERROR'); 
@@ -76,31 +71,28 @@ app.post('/??????????????????????///', function (req, res) {
 //////////////////////////////////////////////////////////////////////
 
 
-// Read a user (log in to existing user)
+// READ profile data for a user
+
+app.get('/users/*', function (req, res) {
+  var nameToLookup = req.params[0]; // this matches the '*' part of '/users/*' above
+  var passToLookup = req.params[1];
+  db.get('SELECT * FROM users WHERE username = \'' + nameToLookup+'\'', function(err, row){
+   if(row===undefined){
+      res.send('{}');
+    } else {
+      res.send('{"username":"'+row.username+'", "password":"'+row.password+'"}'); 
+    }
+   });
+  //res.send('{}'); // failed, so return an empty JSON object!
+});
+
 app.get('/login/*', function (req, res) {
-  // Start by parsing login info from parameters
   var userToLookup = req.params[0].split("&"); 
   var nameToLookup = userToLookup[0];
   var passToLookup = userToLookup[1];
   console.log(nameToLookup);
   console.log(passToLookup);
-
-  // If user is a match in database, return the user's data.
   db.get('SELECT * FROM users WHERE username = \'' + nameToLookup+'\' AND password =  \''+ passToLookup + '\'', function(err, row){
-   if(row===undefined){
-      res.send('{}');
-    } else {
-      res.send('{"username":"'+row.username+'", "password":"'+row.password+'"}'); 
-
-    }
-   });
-});
-
-// Read profile data for a user
-app.get('/users/*', function (req, res) {
-  var nameToLookup = req.params[0]; // this matches the '*' part of '/users/*' above
-  var passToLookup = req.params[1];
-  db.get('SELECT * FROM users WHERE username = \'' + nameToLookup+'\'', function(err, row){
    if(row===undefined){
       res.send('{}');
     } else {

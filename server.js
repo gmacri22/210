@@ -1,4 +1,4 @@
-/*
+/* TRYING TO FIGURE OUT WHAT GIT IS DOING
  * Authors: Gianna Macri, Mario Natalino
  * Project: Backpack
  * Last updated: 2015 November 19

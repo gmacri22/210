@@ -1,14 +1,17 @@
 <html>
-
 <head>
-<title>Welcome to Backpack</title>
+<title>Backpack</title>
 
 <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
 
 <script type="text/javascript">
+if(localStorage['login'] == undefined){
+    window.location.replace("http://localhost:3000/login.html");
+}
+
 $(document).ready(function() {
-  // define a generic Ajax error handler:
-  // http://api.jquery.com/ajaxerror/
+  $("#welcomeDiv").html("Hello, "+ localStorage['login']);
+
   $(document).ajaxError(function() {
     alert("Sorry, there was a problem!");
   });
@@ -26,13 +29,12 @@ $(document).ready(function() {
         console.log("You received some data!", data);
         if (data.username) {
           $("#nameDiv").html("My name is " + data.username);
-          $("#ageDiv").html("My password is " + data.password);
+          $("#passDiv").html("My password is " + data.password);
         } else {
           $("#status").html("Error: could not find user!");
-          // clear the profile display
+
           $("#nameDiv").html("");
-          $("#ageDiv").html("");
-          $("#profileImage").attr("src", "");
+          $("#passDiv").html("");
         }
       },
     });
@@ -56,6 +58,43 @@ $(document).ready(function() {
       },
     });
   });
+
+$("#logoutButton").click(function() {
+    $.ajax({
+      url: "users/" + $("#nameBox").val(),
+      type: "GET",
+      dataType : "json", // this URL returns data in JSON format
+      success: function( data ) {
+          //localStorage['login'] = undefined;
+          localStorage.clear();
+          window.location.replace("http://localhost:3000/login.html");
+      },
+    });
+  });
+////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////
+
+$("#addButton").click(function() {
+
+    $.ajax({
+
+      url: "users/" + $("#stuff").val(),
+      type: "GET",
+      dataType : "json", // this URL returns data in JSON format
+      success: function( data ) {
+        console.log("You received some data!", data);
+        $("#stuffDiv").html("you're trying to add something");
+        
+      },
+    });
+  });
+
+////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////
+
+
   $("#deleteButton").click(function() {
     $.ajax({
       // The URL for the request -- note the simple REST API!
@@ -86,15 +125,22 @@ $(document).ready(function() {
     </p>
 
     <p>
-    <button id="readButton">Read user's profile</button>
-    <button id="updateButton">Update user's profile</button>
-    <button id="deleteButton">Delete user</button>
+    <button id="readButton">Read my profile</button>
+    <button id="updateButton">Update my profile</button>
+    <button id="deleteButton">Delete my profile</button>
+    <button id ="logoutButton">Logout</button>
     </p>
 
     <!-- empty placeholders -->
+    <div id="welcomeDiv"></div>
     <div id="nameDiv"></div>
-    <div id="ageDiv"></div>
+    <div id="passDiv"></div>
 
+    <p>
+    Add a new resource: <input id="stuff" type="text" size="20"/>
+    <button id ="addButton">Add</button>
+    <div id="stuffDiv"></div>
+    </p>
     <hr/>
 
     <div id="status"></div>

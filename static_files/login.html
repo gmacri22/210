@@ -1,31 +1,23 @@
-<!--
-Authors: Gianna Macri, Mario Natalino
-Project: Backpack
-Last updated: 2015 November 19
--->
-
 <html>
 <head>
 <title>Backpack Login</title>
-<meta name="description" content="Login to Backpack">
-<meta name="author" content="Gianna Macri, Mario Natalino"
-<meta charset="UTF-8">
 
 <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
 
 <script type="text/javascript">
 $(document).ready(function() {
-  // Superb error handling!
+  // define a generic Ajax error handler:
+  // http://api.jquery.com/ajaxerror/
   $(document).ajaxError(function() {
     alert("Sorry, there was a problem!");
   });
-  // Button handlers
   $("#createButton").click(function() {
     $.ajax({
-      // CREATE 
+      // The URL for the request -- note the simple REST API!
+      // all URLs are relative to http://localhost:3000/
       url: "login/",
       type: "POST",
-      dataType : "text", 
+      dataType : "text", // this URL returns a plain text string, not JSON
       data : { username: $("#nameBox").val(),
                password: $("#passwordBox").val()
              },
@@ -40,11 +32,14 @@ $(document).ready(function() {
     });
   });
   $("#loginButton").click(function() {
-	$.ajax({
-	  // READ
+    // From: http://learn.jquery.com/ajax/jquery-ajax-methods/
+    // Using the core $.ajax() method
+    $.ajax({
+      // The URL for the request -- note the simple REST API!
+      // all URLs are relative to http://localhost:3000/
       url: "login/" + $("#nameBox").val() + "&"+$("#passwordBox").val(),
       type: "GET",
-      dataType : "json", 
+      dataType : "json", // this URL returns data in JSON format
       success: function( data ) {
         console.log("You received some data!", data);
         if (data.username && data.password) {

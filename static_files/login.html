@@ -5,6 +5,11 @@
 <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
 
 <script type="text/javascript">
+
+if(localStorage['login'] != undefined){
+    window.location.replace("http://localhost:3000/backpack.html");
+}
+
 $(document).ready(function() {
   // define a generic Ajax error handler:
   // http://api.jquery.com/ajaxerror/
@@ -23,11 +28,7 @@ $(document).ready(function() {
              },
       success: function( data ) {
         console.log("You received some data!", data);
-        if (data == 'OK') {
-          $("#status").html("Successfully created a new user!");
-        } else {
-          $("#status").html("Error: could not create a new user!");
-        }
+        window.location.replace("http://localhost:3000/createaccount.html");
       },
     });
   });

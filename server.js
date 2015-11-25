@@ -48,9 +48,18 @@ app.post('/login', function (req, res) {
     }
    });
 
+  //var mkdirp = require('mkdirp');
+  fs.mkdirSync('static_files/users/'+myName+'/');
 
-  // otherwise add the user to the database by pushing (appending)
-  // postBody to the fakeDatabase list
+  var usr = "static_files/users/"+myName+"/posts.db";
+  var fd = fs.openSync(usr, "w");
+  fs.closeSync(fd);
+  
+
+  var usrdb = new sqlite3.Database(usr);
+  usrdb.run('CREATE TABLE posts (id int PRIMARY KEY, title text, body text) ');
+  usrdb.close();
+  
   db.run('INSERT INTO users (username,password) VALUES (\''+myName+'\',\''+myPassword+'\')');
 
   res.send('OK');
@@ -59,11 +68,19 @@ app.post('/login', function (req, res) {
 //////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////
 
-app.post('/??????????????????????///', function (req, res) {
-
-
-
-
+app.post('/backpack.html', function (req, res) {
+  var postbody = req.body;
+  var title = postbody.title;
+  var link = postbody.link;
+  var body = postbody.body;
+  var username = postbody.secretUsername;
+  console.log(username);
+  var usrdb = new sqlite3.Database('static_files/users/'+username+'/posts.db');
+  usrdb.run('INSERT INTO posts (title, body) VALUES (\'<a href="'+link+'">'+title+'</a>\', \''+body+'\')');
+  usrdb.close();
+  res.send('<script>window.location.replace("http://localhost:3000/backpack.html");</script>');
+  //res.send('You added your resource to the database!');
+  
 });
 
 /////////////////////////////////////////////////////////////////////

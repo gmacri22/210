@@ -11,9 +11,9 @@ if(localStorage['login'] == undefined){
 
 $(document).ready(function() {
   $("#welcomeDiv").html("Hello, "+ localStorage['login']);
-
+  $("#secretUsername").attr("value", localStorage['login']);
   $(document).ajaxError(function() {
-    alert("Sorry, there was a problem!");
+    //alert("Sorry, there was a problem!");
   });
 
   $("#readButton").click(function() {
@@ -79,12 +79,12 @@ $("#addButton").click(function() {
 
     $.ajax({
 
-      url: "users/" + $("#stuff").val(),
-      type: "GET",
-      dataType : "json", // this URL returns data in JSON format
+      url: "users/" + $("#title").val()+'|'+ $("#link").val()+'|'+$("#body").val(),
+      type: "POST",
+      dataType : "json", 
       success: function( data ) {
         console.log("You received some data!", data);
-        $("#stuffDiv").html("you're trying to add something");
+        $("#resourceDiv").html("you're trying to add something");
         
       },
     });
@@ -137,9 +137,15 @@ $("#addButton").click(function() {
     <div id="passDiv"></div>
 
     <p>
-    Add a new resource: <input id="stuff" type="text" size="20"/>
-    <button id ="addButton">Add</button>
-    <div id="stuffDiv"></div>
+    Add a new resource: 
+    <form method="post">
+      Title: <input id="title" type="text" name="title" size="20"/> <br>
+      Link: <input id="link" type="text" name="link" size="20"/> <br>
+      Description: <input id="body" type="text" name="body" size="20"/> <br>
+      <input id = "secretUsername" type = "hidden" name="secretUsername" value="">
+      <input id= "addButton" type="submit" name="addButton" value="Add">
+    </form>
+    <div id="resourceDiv"></div>
     </p>
     <hr/>
 

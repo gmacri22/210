@@ -25,6 +25,7 @@ $(document).ready(function() {
         console.log("You received some data!", data);
         if (data == 'OK') {
           $("#status").html("Successfully created a new user!");
+          window.location.replace("http://localhost:3000/login.html");
         } else {
           $("#status").html("Error: could not create a new user!");
         }
@@ -73,7 +74,6 @@ $(document).ready(function() {
 
     <p>
     <button id="createButton">Create an account</button>
-    <button id="loginButton">Login</button>
     </p>
 
     <!-- empty placeholders -->

@@ -12,6 +12,14 @@ if(localStorage['login'] == undefined){
 $(document).ready(function() {
   $("#welcomeDiv").html("Hello, "+ localStorage['login']);
   $("#secretUsername").attr("value", localStorage['login']);
+  $.ajax({
+      url: "backback.html/" + localStorage['login'],
+      type: "GET",
+      dataType: "text/html",
+      success: function( data ) {
+          $("tableDiv").html(data);
+      }
+  });
   $(document).ajaxError(function() {
     //alert("Sorry, there was a problem!");
   });
@@ -40,23 +48,7 @@ $(document).ready(function() {
     });
   });
   $("#updateButton").click(function() {
-    $.ajax({
-      // The URL for the request -- note the simple REST API!
-      // all URLs are relative to http://localhost:3000/
-      url: "users/" + $("#nameBox").val(),
-      type: "PUT",
-      dataType : "text", // this URL returns a plain text string, not JSON
-      data : { password: $("#passwordBox").val()
-             },
-      success: function( data ) {
-        console.log("You received some data!", data);
-        if (data == 'OK') {
-          $("#status").html("Successfully updated user");
-        } else {
-          $("#status").html("Error: could not update user");
-        }
-      },
-    });
+        window.location.replace("http://localhost:3000/accountinfo.html");
   });
 
 $("#logoutButton").click(function() {
@@ -71,44 +63,30 @@ $("#logoutButton").click(function() {
       },
     });
   });
-////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////
 
 $("#addButton").click(function() {
 
     $.ajax({
 
-      url: "users/" + $("#title").val()+'|'+ $("#link").val()+'|'+$("#body").val(),
+      url: "/backpack.html" + $("#title").val()+'|'+ $("#link").val()+'|'+$("#body").val(),
       type: "POST",
       dataType : "json", 
       success: function( data ) {
         console.log("You received some data!", data);
-        $("#resourceDiv").html("you're trying to add something");
         
       },
     });
   });
 
-////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////
-
 
   $("#deleteButton").click(function() {
     $.ajax({
-      // The URL for the request -- note the simple REST API!
-      // all URLs are relative to http://localhost:3000/
-      url: "users/" + $("#nameBox").val(),
+      url: "users/" + localStorage['login'],
       type: "DELETE",
       dataType : "text", // this URL returns a plain text string, not JSON
       success: function( data ) {
-        console.log("You received some data!", data);
-        if (data == 'OK') {
-          $("#status").html("Successfully deleted!");
-        } else {
-          $("#status").html("Error: could not delete!");
-        }
+        localStorage.clear();
+        window.location.replace("http://localhost:3000/login.html");
       },
     });
   });
@@ -120,12 +98,7 @@ $("#addButton").click(function() {
   <h1>Welcome to Backpack!</h1>
 
     <p>
-    Username: <input id="nameBox" type="text" size="20"/>
-    Password: <input id="passwordBox" type="text" size="20"/>
-    </p>
-
-    <p>
-    <button id="readButton">Read my profile</button>
+    <button id="readButton">Find another user</button>
     <button id="updateButton">Update my profile</button>
     <button id="deleteButton">Delete my profile</button>
     <button id ="logoutButton">Logout</button>
@@ -145,10 +118,9 @@ $("#addButton").click(function() {
       <input id = "secretUsername" type = "hidden" name="secretUsername" value="">
       <input id= "addButton" type="submit" name="addButton" value="Add">
     </form>
-    <div id="resourceDiv"></div>
     </p>
     <hr/>
-
+   <div id="tableDiv"></div>
     <div id="status"></div>
   </body>
 </html>

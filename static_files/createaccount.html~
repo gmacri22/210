@@ -73,7 +73,6 @@ $(document).ready(function() {
 
     <p>
     <button id="createButton">Create an account</button>
-    <button id="loginButton">Login</button>
     </p>
 
     <!-- empty placeholders -->

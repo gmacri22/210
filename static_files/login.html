@@ -1,6 +1,26 @@
 <html>
 <head>
 <title>Backpack Login</title>
+<style type="text/css">
+	h1 {
+	    font-size: 50px;
+	    font-family: arial;
+            text-align: center;
+	}
+        p.one {
+            width: 250px;
+            padding: 15px;
+            border: 10px solid darkcyan;
+            margin: 15px;
+            background-color: azure;
+        }
+        body {
+            background-color: lightblue;
+        }
+
+</style>
+
+
 
 <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
 
@@ -67,14 +87,15 @@ $(document).ready(function() {
   <body>
   <h1>Backpack</h1>
 
-    <p>
+    <p class="one">    
     Username: <input id="nameBox" type="text" size="20"/>
     Password: <input id="passwordBox" type="text" size="20"/>
+    <button id="loginButton">Login</button>
     </p>
 
-    <p>
+    <p class="two">
+    Don't have an account? 
     <button id="createButton">Create an account</button>
-    <button id="loginButton">Login</button>
     </p>
 
     <!-- empty placeholders -->

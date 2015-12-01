@@ -6,20 +6,60 @@
 	    font-size: 50px;
 	    font-family: arial;
             text-align: center;
+            color: #4d4d4d;
 	}
-        p.one {
-            width: 250px;
+        #container {
+            background-color: lightblue;
+            height: 300px;
+        }
+        body {
+            background-color: #4d4d4d;
+        }
+       #left {
             padding: 15px;
             border: 10px solid darkcyan;
             margin: 15px;
             background-color: azure;
--webkit-column-rule: 1px solid lightblue; /* Chrome, Safari, Opera */
-    -moz-column-rule: 1px solid lightblue; /* Firefox */
-    column-rule: 1px solid lightblue;
+            width: 250px;
+            height: 70px;
+            float: left;
         }
-        body {
-            background-color: lightblue;
+       #create {
+            padding: 15px;
+            border: 10px solid darkcyan;
+            margin: 15px;
+            background-color: azure;
+            width: 150px;
+            height: 70px;
+            float: left;
+            margin-left: 20px;
+       }
+
+       #right {
+            padding: 15px;
+            border: 10px solid darkcyan;
+            margin: 15px;
+            background-color: azure;
+            width: 550px;
+            height: 100px;
+            margin-left: 580px;
+       }
+        .btn {
+            -webkit-border-radius: 3;
+            -moz-border-radius: 3;
+            border-radius: 3px;
+            background: #4d4d4d;
+            font-family: Arial;
+            color: #ffffff;
+            border: solid #ffffff 1px;
+            font-size: 12px;
+            padding: 4px 8px 4px 8px;
+            text-decoration: none;
         }
+        .btn:hover {
+            background: #a6a6a6;
+            text-decoration: none;
+       }
 
 </style>
 
@@ -88,24 +128,26 @@ $(document).ready(function() {
 
 </head>
   <body>
-  <h1>Backpack</h1>
+ 
 
-    <p class="one">    
-    Username: <input id="nameBox" type="text" size="20"/>
-    Password: <input id="passwordBox" type="text" size="20"/>
-    <button id="loginButton">Login</button>
-    </p>
+   <div id="container">
+ <h1>Backpack</h1>
+      <div id="left">
+        Username: <input id="nameBox" type="text" size="20"/>
+        Password: <input id="passwordBox" type="text" size="20"/>
+        <button id="loginButton">Login</button>
+      </div>
+      <div id="create">
+        Don't have an account? 
+        <button id="createButton">Sign Up</button>
+      </div>
+      <div id="right">
+         What is Backpack?
+         A bunch of text describing what is is because that is the sort of thing you put on a login page Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin et enim laoreet, ullamcorper massa fringilla, condimentum purus. Nam at volutpat tortor, sed bibendum lectus. Fusce finibus, orci vel condimentum scelerisque, erat est vulputate tellus, et dictum erat libero vel tellus. Nunc commodo ullamcorper orci dictum efficitur.
+      </div>
+    </div>
 
-    <p class="two">
-    Don't have an account? 
-    <button id="createButton">Create an account</button>
-    </p>
-
-    <!-- empty placeholders -->
-    <div id="nameDiv"></div>
-    <div id="passDiv"></div>
-
-    <hr/>
+   
 
     <div id="status"></div>
   </body>

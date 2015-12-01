@@ -1,6 +1,69 @@
 <html>
 <head>
 <title>Backpack</title>
+<style type="text/css">
+	h1 {
+	    font-size: 50px;
+	    font-family: arial;
+            text-align: center;
+            color: #4d4d4d;
+	}
+        body {
+            background-color: #4d4d4d;
+        }
+        #container {
+            background-color: lightblue;
+            height: 665px;
+        }
+        #form {
+            padding: 15px;
+            border: 10px solid darkcyan;
+            margin: 15px;
+            background-color: azure;
+            width: 470px;
+            height: 90px;
+            float: left;
+        }
+        #buttons {
+            padding: 15px;
+            border: 10px solid darkcyan;
+            margin: 15px;
+            background-color: azure;
+            width: 150px;
+            height: 90px;
+            float: left;
+            margin-left: 20px;
+        }
+        table, th, td {
+            padding: 5px;
+        }
+        th {
+            background-color: darkcyan;
+            color: white;
+        }
+        td {
+            background-color: #4d4d4d;
+            color: white;
+        }
+.btn {
+  -webkit-border-radius: 3;
+  -moz-border-radius: 3;
+  border-radius: 3px;
+  background: #4d4d4d;
+  font-family: Arial;
+  color: #ffffff;
+  border: solid #ffffff 1px;
+  font-size: 12px;
+  padding: 4px 8px 4px 8px;
+  text-decoration: none;
+}
+.btn:hover {
+  background: #a6a6a6;
+  text-decoration: none;
+}
+        
+
+</style>
 
 <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
 
@@ -17,7 +80,7 @@ $(document).ready(function() {
       type: "GET",
       dataType: "text/html",
       success: function( data ) {
-          $("tableDiv").html();
+          $("tableDiv").html(data);
       }
   });
   $(document).ajaxError(function() {
@@ -95,31 +158,51 @@ $("#addButton").click(function() {
 
 </head>
   <body>
+<div id="container">
   <h1>Welcome to Backpack!</h1>
 
-    <p>
-    <button id="readButton">Find another user</button>
-    <button id="updateButton">Update my profile</button>
-    <button id="deleteButton">Delete my profile</button>
-    <button id ="logoutButton">Logout</button>
-    </p>
+    <div id="buttons">
+    <button id="readButton" button type="button" class="btn">Find another user</button>
+    <button id="updateButton" button type="button" class="btn">Update my profile</button>
+    <button id="deleteButton" button type="button" class="btn">Delete my profile</button>
+    <button id ="logoutButton" button type="button" class="btn">Logout</button>
+    </div>
 
-    <!-- empty placeholders -->
-    <div id="welcomeDiv"></div>
-    <div id="nameDiv"></div>
-    <div id="passDiv"></div>
-
-    <p>
+    <div id="form">
     Add a new resource: 
     <form method="post">
-      Title: <input id="title" type="text" name="title" size="20"/> <br>
-      Link: <input id="link" type="text" name="link" size="20"/> <br>
-      Description: <input id="body" type="text" name="body" size="20"/> <br>
+      Title: <input id="title" type="text" name="title" size="20" style="width: 100px;"/>
+      Link: <input id="link" type="text" name="link" size="20" style="width: 250px;"/> <br>
+      Description: <input id="body" type="text" name="body" size="20" style="width: 350px;"/> <br>
       <input id = "secretUsername" type = "hidden" name="secretUsername" value="">
-      <input id= "addButton" type="submit" name="addButton" value="Add">
+      <input id= "addButton" type="submit" name="addButton" value="Add" button type="button" class="btn">
     </form>
-    </p>
-    <hr/>
+    </div>
+
+    <table style="width:90%">
+        <tr>
+           <th>Title</th>
+           <th>Link</th> 
+           <th>Class</th>
+       </tr>
+        <tr>
+            <td>Homepage</td>
+            <td>http://courses.pgbovine.net/csc210/info.htm</td> 
+            <td>CSC210</td>
+       </tr>
+       <tr>
+           <td>Github</td>
+           <td>https://github.com/</td> 
+           <td>CSC210</td>
+       </tr>
+       <tr>
+           <td>CSUG Hours</td>
+           <td>http://csug.rochester.edu/ugc/tutoring/</td> 
+           <td>CSC173</td>
+       </tr>
+    </table>
+
+    </div>
    <div id="tableDiv"></div>
     <div id="status"></div>
   </body>

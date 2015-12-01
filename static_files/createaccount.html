@@ -1,6 +1,48 @@
 <html>
 <head>
 <title>Create an account</title>
+<style type="text/css">
+	h1 {
+	    font-size: 50px;
+	    font-family: arial;
+            text-align: center;
+            color: #4d4d4d
+	}
+        body {
+            background-color: #4d4d4d;
+        }
+        #container {
+            background-color: lightblue;
+            height: 300px;
+        }
+        #info {
+            padding: 15px;
+            border: 10px solid darkcyan;
+            margin: 15px;
+            background-color: azure;
+            width: 250px;
+            height: 80px;
+            float: left;
+            margin-left: 500px;
+        }
+        .btn {
+            -webkit-border-radius: 3;
+            -moz-border-radius: 3;
+            border-radius: 3px;
+            background: #4d4d4d;
+            font-family: Arial;
+            color: #ffffff;
+            border: solid #ffffff 1px;
+            font-size: 12px;
+            padding: 4px 8px 4px 8px;
+            text-decoration: none;
+        }
+        .btn:hover {
+            background: #a6a6a6;
+            text-decoration: none;
+       }
+
+</style>
 
 <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
 
@@ -65,22 +107,16 @@ $(document).ready(function() {
 
 </head>
   <body>
+  <div id="container">
   <h1>Create an account</h1>
 
-    <p>
-    Username: <input id="nameBox" type="text" size="20"/>
-    Password: <input id="passwordBox" type="text" size="20"/>
-    </p>
+    <div id="info">
+    Username: <input id="nameBox" type="text" size="20"/> <br>
+    Password: <input id="passwordBox" type="text" size="20"/> <br>
+    <button id="createButton" button type="button" class="btn">Create an account</button>
+    </div>
 
-    <p>
-    <button id="createButton">Create an account</button>
-    </p>
-
-    <!-- empty placeholders -->
-    <div id="nameDiv"></div>
-    <div id="passDiv"></div>
-
-    <hr/>
+    </div>
 
     <div id="status"></div>
   </body>

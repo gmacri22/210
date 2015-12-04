@@ -8,6 +8,9 @@
             text-align: center;
             color: #4d4d4d;
 	}
+        a {
+            color: lightblue;
+        }
         body {
             background-color: #4d4d4d;
         }
@@ -75,14 +78,32 @@ if(localStorage['login'] == undefined){
 $(document).ready(function() {
   $("#welcomeDiv").html("Hello, "+ localStorage['login']);
   $("#secretUsername").attr("value", localStorage['login']);
-  $.ajax({
+  /*$.ajax({
       url: "backback.html/" + localStorage['login'],
       type: "GET",
       dataType: "text/html",
       success: function( data ) {
-          $("tableDiv").html(data);
+          $("#tableDiv").html(data);
       }
-  });
+  });*/
+  $.get('/backpack.html/'+localStorage['login'], localStorage['login'], function(data, textStatus, jqXHR) {
+          console.log('am i in this get thing?');
+          $("#tableDiv").html(data);
+  }, 'html');
+
+$(".del").click(function() {
+    console.log("del function");
+    $.ajax({
+        url: "/backpack.html",
+        type: "DELETE",
+        data: {username:localStorage['login'], id:parseInt(this.value)}, 
+        dataType: "text/html",
+        success: function (data ) {
+            $("#tableDiv").html(data);
+        }
+    });
+});
+
   $(document).ajaxError(function() {
     //alert("Sorry, there was a problem!");
   });
@@ -127,19 +148,26 @@ $("#logoutButton").click(function() {
     });
   });
 
-$("#addButton").click(function() {
+//$("#addButton").click(function() {
 
-    $.ajax({
+//    $.ajax({
+//       url: "/backpack.html" + $("#title").val()+'|'+ $("#link").val()+'|'+$("#body").val(),
+//        type: "POST",
+//        dataType : "text/html", 
+//        success: function( data ) {
+//        console.log("You received some data!", data);
+//        $("#tableDiv").html(data);
+//      },
+//    });
+//  });
 
-      url: "/backpack.html" + $("#title").val()+'|'+ $("#link").val()+'|'+$("#body").val(),
-      type: "POST",
-      dataType : "json", 
-      success: function( data ) {
-        console.log("You received some data!", data);
-        
-      },
-    });
-  });
+$('#form').submit(function(e) {
+    e.preventDefault();
+    $.post('backpack.html', $('form').serialize(), function(data, textStatus, jqXHR) {
+          console.log('am i in this get thing?');
+          $("#tableDiv").html(data);
+  }, 'html');
+});
 
 
   $("#deleteButton").click(function() {
@@ -154,6 +182,9 @@ $("#addButton").click(function() {
     });
   });
 });
+
+
+
 </script>
 
 </head>
@@ -179,31 +210,9 @@ $("#addButton").click(function() {
     </form>
     </div>
 
-    <table style="width:90%">
-        <tr>
-           <th>Title</th>
-           <th>Link</th> 
-           <th>Class</th>
-       </tr>
-        <tr>
-            <td>Homepage</td>
-            <td>http://courses.pgbovine.net/csc210/info.htm</td> 
-            <td>CSC210</td>
-       </tr>
-       <tr>
-           <td>Github</td>
-           <td>https://github.com/</td> 
-           <td>CSC210</td>
-       </tr>
-       <tr>
-           <td>CSUG Hours</td>
-           <td>http://csug.rochester.edu/ugc/tutoring/</td> 
-           <td>CSC173</td>
-       </tr>
-    </table>
-
+    <div id="tableDiv">You haven't added any resources yet!</div>
     </div>
-   <div id="tableDiv"></div>
+
     <div id="status"></div>
   </body>
 </html>

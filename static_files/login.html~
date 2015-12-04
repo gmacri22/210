@@ -8,6 +8,9 @@
             text-align: center;
             color: #4d4d4d;
 	}
+        #status {
+            color: #ffffff
+        }
         #container {
             background-color: lightblue;
             height: 300px;
@@ -107,17 +110,12 @@ $(document).ready(function() {
       success: function( data ) {
         console.log("You received some data!", data);
         if (data.username && data.password) {
-          $("#nameDiv").html("My name is " + data.username);
-          $("#passDiv").html("My password is " + data.password);
 
           localStorage['login'] = data.username;
 
           window.location.replace("http://localhost:3000/backpack.html");
         } else {
-          $("#status").html("<h1>Error: could not find user!</h1>");
-          // clear the profile display
-          $("#nameDiv").html("");
-          $("#passDiv").html("");
+          $("#status").html("Error: could not find user!");
         }
       },
     });
@@ -135,11 +133,11 @@ $(document).ready(function() {
       <div id="left">
         Username: <input id="nameBox" type="text" size="20"/>
         Password: <input id="passwordBox" type="text" size="20"/>
-        <button id="loginButton">Login</button>
+        <button id="loginButton" button type="button" class="btn">Login</button>
       </div>
       <div id="create">
         Don't have an account? 
-        <button id="createButton">Sign Up</button>
+        <button id="createButton" button type="button" class="btn">Sign Up</button>
       </div>
       <div id="right">
          What is Backpack?
@@ -149,6 +147,6 @@ $(document).ready(function() {
 
    
 
-    <div id="status"></div>
+    <div id="status">            </div>
   </body>
 </html>

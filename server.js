@@ -57,7 +57,7 @@ app.post('/login', function (req, res) {
   
 
   var usrdb = new sqlite3.Database(usr);
-  usrdb.run('CREATE TABLE posts (id int PRIMARY KEY, title text, body text) ');
+  usrdb.run('CREATE TABLE posts (id INTEGER PRIMARY KEY, title TEXT, body text) ');
   usrdb.close();
   
   db.run('INSERT INTO users (username,password) VALUES (\''+myName+'\',\''+myPassword+'\')');
@@ -71,14 +71,61 @@ app.post('/backpack.html', function (req, res) {
   var link = postbody.link;
   var body = postbody.body;
   var username = postbody.secretUsername;
-  console.log(username);
+  console.log('Adding something to database');
   var usrdb = new sqlite3.Database('static_files/users/'+username+'/posts.db');
   usrdb.run('INSERT INTO posts (title, body) VALUES (\'<a href="'+link+'">'+title+'</a>\', \''+body+'\')');
+  usrdb.all('SELECT * FROM posts', function(err, rows){
+      var table = "<table>";
+      var i;
+      for(i=0; i<rows.length; i++){
+          table = table.concat("<tr> <td>" + rows[i].title + "</td> <td>"+rows[i].body+"</td> </tr>");
+      }
+      table = table.concat("</table>");
+      res.send(table);
+  });
   
   usrdb.close();
-  res.send('<script>window.location.replace("http://localhost:3000/backpack.html");</script>');
+  //res.send('<script>window.location.replace("http://localhost:3000/backpack.html");</script>');
   //res.send('You added your resource to the database!');
   
+});
+
+app.get('/backpack.html/*', function(req, res) { 
+  var username = req.params[0];
+ 
+  var usrdb = new sqlite3.Database('static_files/users/'+username+'/posts.db');
+  usrdb.all('SELECT * FROM posts', function(err, rows){
+      var table = "<table>";
+      var i;
+      for(i=0; i<rows.length; i++){
+          table = table.concat("<tr> <td>" + rows[i].title + "</td> <td>"+rows[i].body+"</td>"); 
+table = table.concat("<td><button value = "+rows[i].id+" type=\"button\" class=\"btn del\"> Delete </button></td></tr>");
+      }
+      table = table.concat("</table>");
+      res.send(table);
+  });
+  
+  usrdb.close();
+
+});
+
+app.delete('/backpack.html', function (req, res) {
+  var idToDelete = req.body.id;
+  var username = req.body.username;
+  var usrdb = new sqlite3.Database('static_files/users/'+username+'/posts.db');
+  console.log("DELETING "+idToDelete);
+  usrdb.run('DELETE FROM posts WHERE id = ' + idToDelete, function(err, row){
+      var table = "<table>";
+      var i;
+      for(i=0; i<rows.length; i++){
+          table = table.concat("<tr> <td>" + rows[i].title + "</td> <td>"+rows[i].body+"</td>"); 
+table=table.concat("<td><button value = "+rows[i].id+" type=\"button\" class=\"btn del\"> Delete </button> </td></tr>");
+      }
+      table = table.concat("</table>");    
+      res.send(table);
+   });
+
+
 });
 
 
@@ -101,8 +148,6 @@ app.get('/login/*', function (req, res) {
   var userToLookup = req.params[0].split("&"); 
   var nameToLookup = userToLookup[0];
   var passToLookup = userToLookup[1];
-  console.log(nameToLookup);
-  console.log(passToLookup);
   db.get('SELECT * FROM users WHERE username = \'' + nameToLookup+'\' AND password =  \''+ passToLookup + '\'', function(err, row){
    if(row===undefined){
       res.send('{}');
@@ -118,8 +163,6 @@ app.get('/login/*', function (req, res) {
 
 app.delete('/users/*', function (req, res) {
   var nameToLookup = req.params[0];
-  
-  console.log(nameToLookup);
 
   db.run('DELETE FROM users WHERE username = \'' + nameToLookup+'\'', function(err, row){
 
@@ -127,8 +170,6 @@ app.delete('/users/*', function (req, res) {
 
   res.send('OK');
 });
-
-
 
 
 app.put('/login/*', function (req, res) {

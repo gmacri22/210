@@ -97,13 +97,10 @@ $(document).on('click', "button.del", function() {
         url: "/backpack.html",
         type: "DELETE",
         data: {username:localStorage['login'], id:parseInt(this.value)}, 
-        dataType: "text/html",
+        dataType: "html",
         success: function (data ) {
             console.log("aslaskljsdlhdslgdlhsa");
             $("#tableDiv").html(data);
-        }
-        error: function (data) {
-            console.log("FUCK YOU");
         }
     });
 });

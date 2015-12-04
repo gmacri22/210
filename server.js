@@ -114,18 +114,20 @@ app.delete('/backpack.html', function (req, res) {
   var username = req.body.username;
   var usrdb = new sqlite3.Database('static_files/users/'+username+'/posts.db');
   console.log("DELETING "+idToDelete);
-  usrdb.run('DELETE FROM posts WHERE id = ' + idToDelete, function(err, row){
+  usrdb.run('DELETE FROM posts WHERE id = ' + idToDelete);
+  usrdb.all('SELECT * FROM posts', function(err, rows){
       var table = "<table>";
       var i;
       for(i=0; i<rows.length; i++){
           table = table.concat("<tr> <td>" + rows[i].title + "</td> <td>"+rows[i].body+"</td>"); 
-table=table.concat("<td><button value = "+rows[i].id+" type=\"button\" class=\"btn del\"> Delete </button> </td></tr>");
+table = table.concat("<td><button value = "+rows[i].id+" type=\"button\" class=\"btn del\"> Delete </button></td></tr>");
       }
-      table = table.concat("</table>");    
+      table = table.concat("</table>");
+      console.log("send a print");
       res.send(table);
-   });
+  });
 
-
+ usrdb.close();
 });
 
 

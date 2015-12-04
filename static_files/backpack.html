@@ -91,7 +91,7 @@ $(document).ready(function() {
           $("#tableDiv").html(data);
   }, 'html');
 
-$(".del").click(function() {
+$(document).on('click', "button.del", function() {
     console.log("del function");
     $.ajax({
         url: "/backpack.html",
@@ -99,6 +99,7 @@ $(".del").click(function() {
         data: {username:localStorage['login'], id:parseInt(this.value)}, 
         dataType: "text/html",
         success: function (data ) {
+            console.log("aslaskljsdlhdslgdlhsa");
             $("#tableDiv").html(data);
         }
     });

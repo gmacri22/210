@@ -86,6 +86,8 @@ table = table.concat("<td><button value = "+rows[i].id+" type=\"button\" class=\
   });
   
   usrdb.close();
+  //res.send('<script>window.location.replace("http://localhost:3000/backpack.html");</script>');
+  //res.send('You added your resource to the database!');
   
 });
 

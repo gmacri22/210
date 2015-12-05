@@ -47,6 +47,10 @@
 <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
 
 <script type="text/javascript">
+if(localStorage['login'] == undefined){
+    window.location.replace("http://localhost:3000/login.html");
+}
+
 $(document).ready(function() {
   // define a generic Ajax error handler:
   // http://api.jquery.com/ajaxerror/
@@ -113,7 +117,7 @@ $(document).ready(function() {
     <div id="info">
     Username: <input id="nameBox" type="text" size="20"/> <br>
     Password: <input id="passwordBox" type="text" size="20"/> <br>
-    <button id="createButton">Create an account</button>
+    <button id="createButton" button type="button" class="btn">Create an account</button>
     </div>
 
     </div>

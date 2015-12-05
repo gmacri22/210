@@ -78,15 +78,14 @@ app.post('/backpack.html', function (req, res) {
       var table = "<table>";
       var i;
       for(i=0; i<rows.length; i++){
-          table = table.concat("<tr> <td>" + rows[i].title + "</td> <td>"+rows[i].body+"</td> </tr>");
+          table = table.concat("<tr> <td>" + rows[i].title + "</td> <td>"+rows[i].body+"</td>"); 
+table = table.concat("<td><button value = "+rows[i].id+" type=\"button\" class=\"btn del\"> Delete </button></td></tr>");
       }
       table = table.concat("</table>");
       res.send(table);
   });
   
   usrdb.close();
-  //res.send('<script>window.location.replace("http://localhost:3000/backpack.html");</script>');
-  //res.send('You added your resource to the database!');
   
 });
 

@@ -167,6 +167,7 @@ $('#form').submit(function(e) {
     $.post('backpack.html', $('form').serialize(), function(data, textStatus, jqXHR) {
           console.log('am i in this get thing?');
           $("#tableDiv").html(data);
+          $("#form")[0].reset();
   }, 'html');
 });
 
@@ -202,7 +203,7 @@ $('#form').submit(function(e) {
 
     <div id="form">
     Add a new resource: 
-    <form method="post">
+    <form id= "aform" method="post">
       Title: <input id="title" type="text" name="title" size="20" style="width: 100px;"/>
       Link: <input id="link" type="text" name="link" size="20" style="width: 250px;"/> <br>
       Description: <input id="body" type="text" name="body" size="20" style="width: 350px;"/> <br>

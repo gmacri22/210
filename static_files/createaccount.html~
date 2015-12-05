@@ -47,9 +47,7 @@
 <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
 
 <script type="text/javascript">
-if(localStorage['login'] == undefined){
-    window.location.replace("http://localhost:3000/login.html");
-}
+
 
 $(document).ready(function() {
   // define a generic Ajax error handler:

@@ -105,6 +105,18 @@ $(document).on('click', "button.del", function() {
     });
 });
 
+ $("#editButton").click(function() {
+    $.ajax({
+        url:
+        type:
+        dataType:
+        success: function (  ) {
+            
+        },
+    });
+ });
+
+
   $(document).ajaxError(function() {
     //alert("Sorry, there was a problem!");
   });
@@ -149,27 +161,16 @@ $("#logoutButton").click(function() {
     });
   });
 
-//$("#addButton").click(function() {
-
-//    $.ajax({
-//       url: "/backpack.html" + $("#title").val()+'|'+ $("#link").val()+'|'+$("#body").val(),
-//        type: "POST",
-//        dataType : "text/html", 
-//        success: function( data ) {
-//        console.log("You received some data!", data);
-//        $("#tableDiv").html(data);
-//      },
-//    });
-//  });
-
 $('#form').submit(function(e) {
     e.preventDefault();
     $.post('backpack.html', $('form').serialize(), function(data, textStatus, jqXHR) {
           console.log('am i in this get thing?');
           $("#tableDiv").html(data);
-          $("#form")[0].reset();
+          $("#aform")[0].reset();
   }, 'html');
 });
+
+
 
 
   $("#deleteButton").click(function() {

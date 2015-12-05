@@ -79,8 +79,8 @@ app.post('/backpack.html', function (req, res) {
       var i;
       for(i=0; i<rows.length; i++){
           table = table.concat("<tr> <td>" + rows[i].title + "</td> <td>"+rows[i].body+"</td>"); 
-table = table.concat("<td><button value = "+rows[i].id+" type=\"button\" class=\"btn del\"> Delete </button></td>");
-table = table.concat("<td><button value = "+rows[i].id+" type=\"button\" class=\"btn edit\"> Edit </button></td></tr>");
+table = table.concat("<td><button value = "+rows[i].id+" type=\"button\" class=\"btn edit\"> Edit </button></td>");
+table = table.concat("<td><button value = "+rows[i].id+" type=\"button\" class=\"btn del\"> Delete </button></td></tr>");
       }
       table = table.concat("</table>");
       res.send(table);
@@ -90,15 +90,16 @@ table = table.concat("<td><button value = "+rows[i].id+" type=\"button\" class=\
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/*app.put('/backpack.html', function (req, res) {
+/*
+app.put('/backpack.html', function (req, res) {
   var postbody = req.body;
   var title = postbody.title;
   var link = postbody.link;
   var body = postbody.body;
   var username = postbody.secretUsername;
-  console.log('Adding something to database');
+  console.log('Trying to edit a resource');
   var usrdb = new sqlite3.Database('static_files/users/'+username+'/posts.db');
-  usrdb.run('INSERT INTO posts (title, body) VALUES (\'<a href="'+link+'">'+title+'</a>\', \''+body+'\')');
+  usrdb.run( SOME SORT OF UPDATE THING );
   usrdb.all('SELECT * FROM posts', function(err, rows){
       var table = "<table>";
       var i;
@@ -110,7 +111,8 @@ table = table.concat("<td><button value = "+rows[i].id+" type=\"button\" class=\
       res.send(table);
   });
   usrdb.close();
-});*/
+});
+*/
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -123,8 +125,8 @@ app.get('/backpack.html/*', function(req, res) {
       var i;
       for(i=0; i<rows.length; i++){
           table = table.concat("<tr> <td>" + rows[i].title + "</td> <td>"+rows[i].body+"</td>"); 
-table = table.concat("<td><button value = "+rows[i].id+" type=\"button\" class=\"btn del\"> Delete </button></td>");
-table = table.concat("<td><button value = "+rows[i].id+" type=\"button\" class=\"btn edit\"> Edit </button></td></tr>");
+table = table.concat("<td><button value = "+rows[i].id+" type=\"button\" class=\"btn edit\"> Edit </button></td>");
+table = table.concat("<td><button value = "+rows[i].id+" type=\"button\" class=\"btn del\"> Delete </button></td></tr>");
       }
       table = table.concat("</table>");
       res.send(table);
@@ -145,8 +147,8 @@ app.delete('/backpack.html', function (req, res) {
       var i;
       for(i=0; i<rows.length; i++){
           table = table.concat("<tr> <td>" + rows[i].title + "</td> <td>"+rows[i].body+"</td>"); 
-table = table.concat("<td><button value = "+rows[i].id+" type=\"button\" class=\"btn del\"> Delete </button></td>");
-table = table.concat("<td><button value = "+rows[i].id+" type=\"button\" class=\"btn edit\"> Edit </button></td></tr>");
+table = table.concat("<td><button value = "+rows[i].id+" type=\"button\" class=\"btn edit\"> Edit </button></td>");
+table = table.concat("<td><button value = "+rows[i].id+" type=\"button\" class=\"btn del\"> Delete </button></td></tr>");
       }
       table = table.concat("</table>");
       console.log("send a print");

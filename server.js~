@@ -27,6 +27,8 @@ app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 // will send the file static_files/cat.jpg to the user's Web browser
 app.use(express.static('static_files'));
 
+
+
 // CREATE a new user
 
 app.post('/login', function (req, res) {
@@ -78,7 +80,7 @@ app.post('/backpack.html', function (req, res) {
       var table = "<table>";
       var i;
       for(i=0; i<rows.length; i++){
-          table = table.concat("<tr> <td>" + rows[i].title + "</td> <td>"+rows[i].body+"</td>"); 
+          table = table.concat("<tr> <td contenteditable=\"true\">"+rows[i].title+"</td><td contenteditable=\"true\">"+rows[i].body+"</td>"); 
 table = table.concat("<td><button value = "+rows[i].id+" type=\"button\" class=\"btn edit\"> Edit </button></td>");
 table = table.concat("<td><button value = "+rows[i].id+" type=\"button\" class=\"btn del\"> Delete </button></td></tr>");
       }
@@ -88,34 +90,6 @@ table = table.concat("<td><button value = "+rows[i].id+" type=\"button\" class=\
   usrdb.close();
 });
 
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-app.put('/backpack.html', function (req, res) {
-  var postbody = req.body;
-  var title = postbody.title;
-  var link = postbody.link;
-  var body = postbody.body;
-  var username = postbody.secretUsername;
-  console.log('Trying to edit a resource');
-  var usrdb = new sqlite3.Database('static_files/users/'+username+'/posts.db');
-  usrdb.run( SOME SORT OF UPDATE THING );
-  usrdb.all('SELECT * FROM posts', function(err, rows){
-      var table = "<table>";
-      var i;
-      for(i=0; i<rows.length; i++){
-          table = table.concat("<tr> <td>" + rows[i].title + "</td> <td>"+rows[i].body+"</td>"); 
-table = table.concat("<td><button value = "+rows[i].id+" type=\"button\" class=\"btn del\"> Delete </button></td></tr>");
-      }
-      table = table.concat("</table>");
-      res.send(table);
-  });
-  usrdb.close();
-});
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 app.get('/backpack.html/*', function(req, res) { 
   var username = req.params[0];
  
@@ -124,7 +98,7 @@ app.get('/backpack.html/*', function(req, res) {
       var table = "<table>";
       var i;
       for(i=0; i<rows.length; i++){
-          table = table.concat("<tr> <td>" + rows[i].title + "</td> <td>"+rows[i].body+"</td>"); 
+        table = table.concat("<tr> <td contenteditable=\"true\">"+rows[i].title+"</td><td contenteditable=\"true\">"+rows[i].body+"</td>"); 
 table = table.concat("<td><button value = "+rows[i].id+" type=\"button\" class=\"btn edit\"> Edit </button></td>");
 table = table.concat("<td><button value = "+rows[i].id+" type=\"button\" class=\"btn del\"> Delete </button></td></tr>");
       }
@@ -199,6 +173,19 @@ app.delete('/users/*', function (req, res) {
    });
 
   res.send('OK');
+});
+
+app.put('/backpack.html/*', function(req, res) {
+    console.log(req.params[0]);
+    var text = req.params[0].split("&");
+    var stuff = text[0];
+    var username = text[1];
+    var id = text[2];
+    var usrdb = new sqlite3.Database('static_files/users/'+username+'/posts.db');
+    usrdb.run(
+
+    
+    res.send('OK');
 });
 
 

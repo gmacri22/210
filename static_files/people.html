@@ -1,0 +1,62 @@
+<html>
+<head>
+<title>Backpack Users</title>
+<link rel="stylesheet" type=="text/css" href="goddamnedstyle.css">
+
+<script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+<script type="text/javascript">
+
+if(localStorage['login'] == undefined){
+    window.location.replace("http://localhost:3000/login.html");
+}
+
+$(document).ready(function() {
+
+
+
+
+$.ajax({
+      url: '/people',
+      type: "GET",
+      dataType : "text",
+      success: function(data) {
+        $("#userTable").html(data);
+        console.log("found people?");
+      },
+    });
+
+
+$("#homeButton").click(function() {
+  window.location.replace("http://localhost:3000/backpack.html");
+});
+
+
+
+
+});
+
+</script>
+
+</head>
+  <body>
+<h1> Backpack Users </h1>
+    
+    <div id="userTable">Looks like you're the only user</div>
+
+    <button id ="homeButton" button type="button" class="btn">Home</button>
+  </body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+

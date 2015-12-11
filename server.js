@@ -33,21 +33,6 @@ app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 // Location of static files
 app.use(express.static('static_files'));
 
-function generateTable(response, username, filterlist){
-  var usrdb = new sqlite3.Database('static_files/users/'+username+'/posts.db');
-  usrdb.all('SELECT * FROM posts', function(err, rows){
-      var table = "<table>";
-      var i;
-      for(i=0; i<rows.length; i++){
-table = table.concat("<tr> <td contenteditable=\"true\"> <a href=\""+rows[i].link+"\">"+rows[i].title+"</a> </td><td contenteditable=\"true\">"+rows[i].body+"</td>"); 
-table = table.concat("<td><button value = "+rows[i].id+" type=\"button\" class=\"btn edit\"> Edit </button></td>");
-table = table.concat("<td><button value = "+rows[i].id+" type=\"button\" class=\"btn del\"> Delete </button></td></tr>");
-      }
-      table = table.concat("</table>");
-      
-      response.send(table);
-  });
-}
 
 
 /************************REQUESTS TO LOGIN************************/
@@ -106,7 +91,19 @@ app.post('/login', function (req, res) {
 /************************REQUESTS TO BACKPACK************************/
 
 app.get('/backpack.html/*', function(req, res) {
-  generateTable(res, req.query.username, []);
+  var usrdb = new sqlite3.Database('static_files/users/'+req.query.username+'/posts.db');
+  usrdb.all('SELECT * FROM posts', function(err, rows){
+	  var table = "<table>";
+      var i;
+      for(i=0; i<rows.length; i++){
+table = table.concat("<tr> <td contenteditable=\"true\"> <a href=\""+rows[i].link+"\">"+rows[i].title+"</a> </td><td contenteditable=\"true\">"+rows[i].body+"</td>"); 
+table = table.concat("<td><button value = "+rows[i].id+" type=\"button\" class=\"btn edit\"> Edit </button></td>");
+table = table.concat("<td><button value = "+rows[i].id+" type=\"button\" class=\"btn del\"> Delete </button></td></tr>");
+      }
+      table = table.concat("</table>");
+	  res.send(table);
+  });
+  usrdb.close();
 });
 
 app.post('/backpack.html', function (req, res) {
@@ -118,9 +115,18 @@ app.post('/backpack.html', function (req, res) {
   console.log('Adding something to database');
   var usrdb = new sqlite3.Database('static_files/users/'+username+'/posts.db');
   usrdb.run("INSERT INTO posts (title, link, body) VALUES (?, ?, ?)", [title, link, body]);
-  
-  generateTable(res, username,[]);
-
+  usrdb.all('SELECT * FROM posts', function(err, rows){
+	  var table = "<table>";
+      var i;
+      for(i=0; i<rows.length; i++){
+table = table.concat("<tr> <td contenteditable=\"true\"> <a href=\""+rows[i].link+"\">"+rows[i].title+"</a> </td><td contenteditable=\"true\">"+rows[i].body+"</td>"); 
+table = table.concat("<td><button value = "+rows[i].id+" type=\"button\" class=\"btn edit\"> Edit </button></td>");
+table = table.concat("<td><button value = "+rows[i].id+" type=\"button\" class=\"btn del\"> Delete </button></td></tr>");
+      }
+      table = table.concat("</table>");
+	  res.send(table);
+  });
+  usrdb.close();
 });
 /*
 app.put('/backpack.html/*', function(req, res) {
@@ -141,9 +147,19 @@ app.delete('/backpack.html', function (req, res) {
   var username = req.body.username;
   var usrdb = new sqlite3.Database('static_files/users/'+username+'/posts.db');
   console.log("DELETING "+idToDelete);
-  usrdb.run('DELETE FROM posts WHERE id = ' + idToDelete);
-  
-  generateTable(res, username, []);
+  usrdb.run("DELETE FROM posts WHERE id = ?", idToDelete);
+  usrdb.all('SELECT * FROM posts', function(err, rows){
+	  var table = "<table>";
+      var i;
+      for(i=0; i<rows.length; i++){
+table = table.concat("<tr> <td contenteditable=\"true\"> <a href=\""+rows[i].link+"\">"+rows[i].title+"</a> </td><td contenteditable=\"true\">"+rows[i].body+"</td>"); 
+table = table.concat("<td><button value = "+rows[i].id+" type=\"button\" class=\"btn edit\"> Edit </button></td>");
+table = table.concat("<td><button value = "+rows[i].id+" type=\"button\" class=\"btn del\"> Delete </button></td></tr>");
+      }
+      table = table.concat("</table>");
+	  res.send(table);
+  });
+  usrdb.close();
 });
 
 

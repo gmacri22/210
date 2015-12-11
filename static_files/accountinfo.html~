@@ -1,52 +1,14 @@
 <html>
 <head>
 <title>Update your account information</title>
-<style type="text/css">
-	h1 {
-	    font-size: 50px;
-	    font-family: arial;
-            text-align: center;
-            color: #4d4d4d;
-	}
-        body {
-            background-color: #4d4d4d;
-        }
-        #container {
-            background-color: lightblue;
-            height: 300px;
-        }
-        #password {
-            padding: 15px;
-            border: 10px solid darkcyan;
-            margin: 15px;
-            background-color: azure;
-            width: 470px;
-            height: 40px;
-            float: center;
-            margin-left: 350px;
-        }
-        .btn {
-            -webkit-border-radius: 3;
-            -moz-border-radius: 3;
-            border-radius: 3px;
-            background: #4d4d4d;
-            font-family: Arial;
-            color: #ffffff;
-            border: solid #ffffff 1px;
-            font-size: 12px;
-            padding: 4px 8px 4px 8px;
-            text-decoration: none;
-        }
-        .btn:hover {
-            background: #a6a6a6;
-            text-decoration: none;
-       }
-
-</style>
+<link rel="stylesheet" type="text/css" href="goddamnedstyle.css">
 
 <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
 
 <script type="text/javascript">
+if(localStorage['login'] == undefined){
+    window.location.replace("http://localhost:3000/login.html");
+}
 $(document).ready(function() {
   // define a generic Ajax error handler:
   // http://api.jquery.com/ajaxerror/
@@ -66,7 +28,6 @@ $(document).ready(function() {
       success: function( data ) {
         console.log("You received some data!", data);
         if (data == 'OK') {
-
           window.location.replace("http://localhost:3000/backpack.html");
         } else {
           $("#status").html("Error: could not update information!");
@@ -74,18 +35,21 @@ $(document).ready(function() {
       },
     });
   });
+  $("#nopeButton").click(function() {
+	window.location.replace("backpack.html");
+  });
 });
-
 </script>
 
 </head>
   <body>
-  <div id="container">
+  <div id="containerc">
   <h1>Update your account information</h1>
 
     <div id="password">
-    New Password: <input id="passwordBox" type="text" size="20"/>
+    New Password: <input type="password" class="form-control"  id="passwordBox" type="text" size="20"/>
     <button id="updateButton" button type="button" class="btn">Update Information</button>
+	<button id="nopeButton" button type="button" class="btn">Never mind</button>
     </div>
 
     <!-- empty placeholders -->

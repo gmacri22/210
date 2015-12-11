@@ -36,29 +36,6 @@ $(document).on('click', "button.del", function() {
     //alert("Sorry, there was a problem!");
   });
 
-  $("#readButton").click(function() {
-    // From: http://learn.jquery.com/ajax/jquery-ajax-methods/
-    // Using the core $.ajax() method
-    $.ajax({
-      // The URL for the request -- note the simple REST API!
-      // all URLs are relative to http://localhost:3000/
-      url: "users/" + $("#nameBox").val(),
-      type: "GET",
-      dataType : "json", // this URL returns data in JSON format
-      success: function( data ) {
-        console.log("You received some data!", data);
-        if (data.username) {
-          $("#nameDiv").html("My name is " + data.username);
-          $("#passDiv").html("My password is " + data.password);
-        } else {
-          $("#status").html("Error: could not find user!");
-
-          $("#nameDiv").html("");
-          $("#passDiv").html("");
-        }
-      },
-    });
-  });
   $("#updateButton").click(function() {
         window.location.replace("http://localhost:3000/accountinfo.html");
   });
@@ -86,7 +63,7 @@ $('#form').submit(function(e) {
 });
 
 
-$(document).on('click', "button.edit", function() { 
+/*$(document).on('click', "button.edit", function() { 
 	//get the edited element content
     var userVersion = document.getElementById("title"+this.value).innerHTML;
 	var userV2 = document.getElementById("link"+this.value).innerHTML;
@@ -106,6 +83,41 @@ $(document).on('click', "button.edit", function() {
     });
   
 
+});*/
+
+$(document).on('click', "button.edit", function() {
+	this.innerHTML = "Accept";
+	this.setAttribute("class", "btn accept");
+	document.getElementById("cat"+this.value).setAttribute("contenteditable", true);
+	document.getElementById("title"+this.value).setAttribute("contenteditable", true);
+	document.getElementById("link"+this.value).setAttribute("contenteditable", true);
+	document.getElementById("desc"+this.value).setAttribute("contenteditable", true);
+});
+
+$(document).on('click', "button.accept", function() { 
+	//get the edited element content
+    var userVersion = document.getElementById("title"+this.value).innerHTML;
+	var userV2 = document.getElementById("link"+this.value).innerHTML;
+	var userV3 = document.getElementById("desc"+this.value).innerHTML;
+	var userV4 = document.getElementById("cat"+this.value).innerHTML;
+    $.ajax({
+          url: '/backpack.html/',
+          type: "PUT",
+		  contentType: 'application/json',
+		  data: "{\"category\":\""+userV4+"\", \"title\":\""+userVersion+"\",\"link\":\""
+				+userV2+"\", \"desc\":\""+userV3+"\", \"username\":\""
+				+localStorage['login']+"\", \"id\":"+parseInt(this.value)+"}",
+          dataType: "text/html", 
+          success: function( data ) {
+			$("#tableDiv").html(data);
+		  },
+    });
+	this.innerHTML = "Edit";
+	this.setAttribute("class","btn edit");
+	document.getElementById("cat"+this.value).setAttribute("contenteditable", false);
+	document.getElementById("title"+this.value).setAttribute("contenteditable", false);
+	document.getElementById("link"+this.value).setAttribute("contenteditable", false);
+	document.getElementById("desc"+this.value).setAttribute("contenteditable", false);
 });
 
 
@@ -122,15 +134,19 @@ $(document).on('click', "button.edit", function() {
       },
     });
   });
+
+$("#readButton").click(function() {
+  window.location.replace("http://localhost:3000/people.html");
+});
+
 });
 
 
 
 </script>
-
 </head>
   <body>
-<div id="container">
+<div id="containerb">
 
   <h1>Welcome to Backpack!</h1>
 
@@ -144,6 +160,8 @@ $(document).on('click', "button.edit", function() {
     <div id="form">
     Add a new resource: 
     <form id= "aform" method="post">
+	   
+      Category: <input id="category" type="text" name="category" size="20" style="width: 350px;"/><br>
       Title: <input id="title" type="text" name="title" size="20" style="width: 100px;"/>
       Link: <input id="link" type="text" name="link" size="20" style="width: 250px;"/> <br>
       Description: <input id="body" type="text" name="body" size="20" style="width: 350px;"/> <br>
@@ -151,10 +169,10 @@ $(document).on('click', "button.edit", function() {
       <input id= "addButton" type="submit" name="addButton" value="Add" button type="button" class="btn">
     </form>
     </div>
-
+	<div>	
     <div id="tableDiv">You haven't added any resources yet!</div>
     </div>
 
-    <div id="status"></div>
+    <div id="status"></div></div>
   </body>
 </html>

@@ -5,16 +5,10 @@
 
 <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
 <script type="text/javascript">
-
 if(localStorage['login'] == undefined){
     window.location.replace("http://localhost:3000/login.html");
 }
-
 $(document).ready(function() {
-
-
-
-
 $.ajax({
       url: '/people',
       type: "GET",
@@ -24,21 +18,15 @@ $.ajax({
         console.log("found people?");
       },
     });
-
-
 $("#homeButton").click(function() {
-  window.location.replace("http://localhost:3000/people.html");
+  window.location.replace("http://localhost:3000/backpack.html");
 });
-
-
-
-
 });
-
 </script>
 
 </head>
   <body>
+<div id="containerc">
 <h1> Backpack Users </h1>
     
     <div id="userTable">Looks like you're the only user</div>
@@ -46,17 +34,3 @@ $("#homeButton").click(function() {
     <button id ="homeButton" button type="button" class="btn">Home</button>
   </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-

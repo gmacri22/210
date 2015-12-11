@@ -5,13 +5,10 @@
 
 <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
 <script type="text/javascript">
-
 if(localStorage['login'] == undefined){
     window.location.replace("http://localhost:3000/login.html");
 }
-
 $(document).ready(function() {
-
 function getQueryVariable(variable)
 {
        var query = window.location.search.substring(1);
@@ -22,8 +19,6 @@ function getQueryVariable(variable)
        }
        return(false);
 }
-
-
 $.ajax({
       url: '/userpage?'+"name="+getQueryVariable("name"),
       type: "GET",
@@ -33,26 +28,19 @@ $.ajax({
         console.log("found that person?");
       },
     });
-
 $("#homeButton").click(function() {
   window.location.replace("http://localhost:3000/backpack.html");
 });
-
-
 });
-
 </script>
 
 </head>
   <body>
+<div id="containerc">
 <h1> Posts </h1>
     
     <div id="postsTable">This user has no resources</div>
     <button id ="homeButton" button type="button" class="btn">Home</button>
-
+</div>
   </body>
 </html>
-
-
-
-

@@ -85,6 +85,15 @@
             float: center;
             margin-left: 350px;
         }
+        #resources {
+            padding: 15px;
+            border: 10px solid darkcyan;
+            margin: 15px;
+            background-color: azure;
+            width: 550px;
+            height: 100px;
+            margin-left: 580px;
+        }
         table, th, td {
             padding: 5px;
         }

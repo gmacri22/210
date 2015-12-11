@@ -9,7 +9,6 @@
 if(localStorage['login'] == undefined){
     window.location.replace("http://localhost:3000/login.html");
 }
-
 $(document).ready(function() {
   // define a generic Ajax error handler:
   // http://api.jquery.com/ajaxerror/
@@ -29,7 +28,6 @@ $(document).ready(function() {
       success: function( data ) {
         console.log("You received some data!", data);
         if (data == 'OK') {
-
           window.location.replace("http://localhost:3000/backpack.html");
         } else {
           $("#status").html("Error: could not update information!");
@@ -41,16 +39,15 @@ $(document).ready(function() {
 	window.location.replace("backpack.html");
   });
 });
-
 </script>
 
 </head>
   <body>
-  <div id="container">
+  <div id="containerc">
   <h1>Update your account information</h1>
 
     <div id="password">
-    New Password: <input id="passwordBox" type="text" size="20"/>
+    New Password: <input type="password" class="form-control" id="passwordBox" type="text" size="20"/>
     <button id="updateButton" button type="button" class="btn">Update Information</button>
 	<button id="nopeButton" button type="button" class="btn">Never mind</button>
     </div>

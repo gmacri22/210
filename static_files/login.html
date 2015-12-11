@@ -1,3 +1,4 @@
+
 <html>
 <head>
 <title>Backpack Login</title>
@@ -7,13 +8,10 @@
 <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
 
 <script type="text/javascript">
-
 // Redirect: You can't log in if you're logged in.
-
 if(localStorage['login'] != undefined){
     window.location.replace("http://localhost:3000/backpack.html");
 }
-
 $(document).ready(function() {
   $(document).ajaxError(function() {
     alert("Sorry, there was a problem!");
@@ -60,7 +58,7 @@ $(document).ready(function() {
   <h1>Backpack</h1>
       <div id="left">
         Username: <input id="nameBox" type="text" size="20"/>
-        Password: <input id="passwordBox" type="text" size="20"/>
+        Password: <input type="password" class="form-control" id="passwordBox" type="text" size="20"/>
         <button id="loginButton" button type="button" class="btn">Login</button>
       </div>
       <div id="create">
@@ -69,7 +67,7 @@ $(document).ready(function() {
       </div>
       <div id="right">
          What is Backpack?
-         A bunch of text describing what is is because that is the sort of thing you put on a login page Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin et enim laoreet, ullamcorper massa fringilla, condimentum purus. Nam at volutpat tortor, sed bibendum lectus. Fusce finibus, orci vel condimentum scelerisque, erat est vulputate tellus, et dictum erat libero vel tellus. Nunc commodo ullamcorper orci dictum efficitur.
+         Backpack allows you to store helpful resources for your classes all in one place. You can add links to your list of resources, tagged with a title, category, and a description, and you can look up other users to see what study tools they might be using. If you already have an account, type your username and password to sign in. Otherwise, click on "Sign Up" to create a Backpack account!
       </div>
     </div>
 

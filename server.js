@@ -33,10 +33,9 @@ app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 // Location of static files
 app.use(express.static('static_files'));
 
-
 app.get('/people', function (req, res) {
   db.all('SELECT * FROM users', function(err, rows){
-      var table = "<table>";
+      var table = "<table> <tr><th>Username</th></tr>";
       var i;
       for(i=0; i<rows.length; i++){
         table = table.concat("<tr><td><a href=\"userpage.html?name="+rows[i].username+"\">" + rows[i].username + "</a></td></tr>");
@@ -47,27 +46,24 @@ app.get('/people', function (req, res) {
 
 });
 
-
 app.get('/userpage*', function (req, res) {
   var usrdb = new sqlite3.Database('static_files/users/'+req.query.name	+'/posts.db');
 
 usrdb.all('SELECT * FROM posts', function(err, rows){
-	  var table = "<table>";
+	  var table = "<table> <tr><th>Category</th><th>Title</th><th>Link</th><th>Description</th></tr>";
       var i;
       for(i=0; i<rows.length; i++){
-table = table.concat("<tr> <td id=title"+rows[i].id+">" 
-	+rows[i].title+"</td><td id=link"+rows[i].id+">"
-	+rows[i].link+"</td><td id=desc"+rows[i].id+">"
-	+rows[i].body+"</td>"); 
+table = table.concat("<tr> <td id=cat"+rows[i].id+">"+rows[i].category+"</td><td id=title"
+    +rows[i].id+">"+rows[i].title+"</td><td id=link"+rows[i].id+">"+rows[i].link+"</td><td id=desc"+rows[i].id+">"+rows[i].body+"</td>"); 
       }
       table = table.concat("</table>");
 	  res.send(table);
   });
   usrdb.close();
-
-
-
 });
+
+
+
 /************************REQUESTS TO LOGIN************************/
 
 // GET - Read - Login
@@ -98,7 +94,7 @@ app.post('/login', function (req, res) {
   // check if user's name is already in database; if so, send an error
   db.get('SELECT * FROM users WHERE username = ?', myName, function(err, row){
    if(!(row===undefined)){
-    res.send('ERROR'); 
+    console.log("should return after this");
     return;
     }
    });
@@ -136,7 +132,7 @@ app.put('/login/*', function (req, res) {
 app.get('/backpack.html/*', function(req, res) {
   var usrdb = new sqlite3.Database('static_files/users/'+req.query.username+'/posts.db');
   usrdb.all('SELECT * FROM posts', function(err, rows){
-	  var table = "<table>";
+	  var table = "<table> <tr><th>Category</th><th>Title</th><th>Link</th><th>Description</th><th>Edit</th><th>Delete</th></tr>";
       var i;
       for(i=0; i<rows.length; i++){
 table = table.concat("<tr> <td id = cat"+rows[i].id+" contenteditable\"false\">"
@@ -166,7 +162,7 @@ app.post('/backpack.html', function (req, res) {
   var usrdb = new sqlite3.Database('static_files/users/'+username+'/posts.db');
   usrdb.run("INSERT INTO posts (category, title, link, body) VALUES (?, ?, ?, ?)", [cat, title, link, body]);
   usrdb.all('SELECT * FROM posts', function(err, rows){
-	  var table = "<table>";
+	  var table = "<table> <tr><th>Category</th><th>Title</th><th>Link</th><th>Description</th><th>Edit</th><th>Delete</th></tr>";
       var i;
       for(i=0; i<rows.length; i++){
 table = table.concat("<tr> <td id = cat"+rows[i].id+" contenteditable\"false\">"
@@ -190,7 +186,7 @@ app.put('/backpack.html/', function(req, res) {
     usrdb.run("UPDATE posts SET category = ?, title = ?, link = ?, body = ? WHERE id = ?",
 		[req.body.category, req.body.title, req.body.link, req.body.desc, req.body.id]); 
   usrdb.all('SELECT * FROM posts', function(err, rows){
-	  var table = "<table>";
+	  var table = "<table> <tr><th>Category</th><th>Title</th><th>Link</th><th>Description</th><th>Edit</th><th>Delete</th></tr>";
       var i;
       for(i=0; i<rows.length; i++){
 table = table.concat("<tr> <td id = cat"+rows[i].id+">"+rows[i].category+"</td><td id=title"
@@ -217,7 +213,7 @@ app.delete('/backpack.html', function (req, res) {
   console.log("DELETING "+idToDelete);
   usrdb.run("DELETE FROM posts WHERE id = ?", idToDelete);
   usrdb.all('SELECT * FROM posts', function(err, rows){
-	  var table = "<table>";
+	  var table = "<table> <tr><th>Category</th><th>Title</th><th>Link</th><th>Description</th><th>Edit</th><th>Delete</th></tr>";
       var i;
       for(i=0; i<rows.length; i++){
 table = table.concat("<tr> <td>"+rows[i].category+"</td><td id=title"
@@ -236,49 +232,7 @@ table = table.concat("<td><button value = "
   usrdb.close();
 });
 
-app.get('/filter.js*', function(req, res) {
-	var usrdb = new sqlite3.Database('static_files/users/'+req.query.username+'/posts.db');
-	
-	usrdb.all("SELECT DISTINCT category FROM posts", function(err, rows) {
-		var filter = "<form role=\"form\"> <label for=\"sel1\"></label>"
-			+ "<select multiple class=\"form-control\" id=\"sel1\">";
-        for(i = 0; i < rows.length; ++i){
-			filter = filter + "<option>"+rows[i].category+"</option>"
-			console.log(rows[i].category);
-		}
-		filter = filter + "</select></form>";
-		res.send(filter); 
-	});
-});
 
-app.get('/fisher.js*', function(req, res) {
-	var username = req.query.username;
-	var filters = req.query.options.split(",");
-
-	console.log(username);
-	console.log(filters[0]);
-
-	var usrdb = new sqlite3.Database('static_files/users/'+req.query.username+'/posts.db');
-  usrdb.all('SELECT * FROM posts WHERE category IN ?',filters, function(err, rows){
-	  var table = "<table>";
-      var i;
-      for(i=0; i<rows.length; i++){
-table = table.concat("<tr> <td id = cat"+rows[i].id+" contenteditable\"false\">"
-	+rows[i].category+"</td><td id=title"+rows[i].id+" contenteditable=\"false\">" 
-	+rows[i].title+"</td><td id=link"+rows[i].id+" contenteditable=\"false\">"
-	+rows[i].link+"</td><td id=desc"+rows[i].id+" contenteditable=\"false\">"
-	+rows[i].body+"</td>"); 
-table = table.concat("<td><button id = editbtn"+rows[i].id+" value = "
-	+rows[i].id+" type=\"button\" class=\"btn edit\"> Edit </button></td>");
-table = table.concat("<td><button value = "
-	+rows[i].id+" type=\"button\" class=\"btn del\"> Delete </button></td></tr>");
-      }
-      table = table.concat("</table>");
-	  res.send(table);
-  });
-  usrdb.close();
-	res.send("<h1>PENIS</h1>");
-});
 // READ profile data for a user
 
 app.get('/users/*', function (req, res) {
@@ -294,7 +248,10 @@ app.get('/users/*', function (req, res) {
   //res.send('{}'); // failed, so return an empty JSON object!
 });
 
+
+
 // DELETE a user
+
 
 app.delete('/users/*', function (req, res) {
   var nameToLookup = req.params[0];
@@ -306,39 +263,22 @@ app.delete('/users/*', function (req, res) {
   res.send('OK');
 });
 
-app.get('/people', function (req, res) {
-  db.all('SELECT * FROM users', function(err, rows){
-      var table = "<table>";
-      var i;
-      for(i=0; i<rows.length; i++){
-        table = table.concat("<tr><td><a href=\"userpage.html?name="+rows[i].username+"\">" + rows[i].username + "</a></td></tr>");
-      }
-      table = table.concat("</table>");
-	  res.send(table);
-  });
 
-});
 
-app.get('/userpage*', function (req, res) {
-  var usrdb = new sqlite3.Database('static_files/users/'+req.query.name	+'/posts.db');
-
-usrdb.all('SELECT * FROM posts', function(err, rows){
-	  var table = "<table>";
-      var i;
-      for(i=0; i<rows.length; i++){
-table = table.concat("<tr> <td id=title"+rows[i].id+">" 
-	+rows[i].title+"</td><td id=link"+rows[i].id+">"
-	+rows[i].link+"</td><td id=desc"+rows[i].id+">"
-	+rows[i].body+"</td>"); 
-      }
-      table = table.concat("</table>");
-	  res.send(table);
-  });
-  usrdb.close();
-});
 
 // start the server on http://localhost:3000/
 var server = app.listen(3000, function () {
   var port = server.address().port;
   console.log('Server started at http://localhost:%s/', port);
 });
+
+
+
+
+
+
+
+
+
+
+

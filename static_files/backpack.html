@@ -17,9 +17,6 @@ $(document).ready(function() {
   $.get('/backpack.html/?username='+localStorage['login'], function(data, textStatus, jqXHR) {
           $("#tableDiv").html(data);
   }, 'html');
-  $.get('/filter.js?username='+localStorage['login'], function(data, textStatus, jqXHR) {
-		  $("#filterDiv").html(data);
-  }, 'html');
 
 
 $(document).on('click', "button.del", function() {
@@ -30,9 +27,6 @@ $(document).on('click', "button.del", function() {
         dataType: "html",
         success: function (data ) {
             $("#tableDiv").html(data);
-			$.get('/filter.js?username='+localStorage['login'], function(data, textStatus, jqXHR) {
-				 $("#filterDiv").html(data);
-			}, 'html');
         }
     });
 });
@@ -65,35 +59,39 @@ $('#form').submit(function(e) {
           console.log('am i in this get thing?');
           $("#tableDiv").html(data);
           $("#aform")[0].reset();
-  $.get('/filter.js?username='+localStorage['login'], function(data, textStatus, jqXHR) {
-		  $("#filterDiv").html(data);
-  }, 'html');
   }, 'html');
 });
+
+
+/*$(document).on('click', "button.edit", function() { 
+	//get the edited element content
+    var userVersion = document.getElementById("title"+this.value).innerHTML;
+	var userV2 = document.getElementById("link"+this.value).innerHTML;
+	var userV3 = document.getElementById("desc"+this.value).innerHTML;
+
+    $.ajax({
+          url: '/backpack.html/',
+          type: "PUT",
+		  contentType: 'application/json',
+		  data: "{\"title\":\""+userVersion+"\",\"link\":\""
+				+userV2+"\", \"desc\":\""+userV3+"\", \"username\":\""
+				+localStorage['login']+"\", \"id\":"+parseInt(this.value)+"}",
+          dataType: "text/html", 
+          success: function( data ) {
+			$("#tableDiv").html(data);
+		  },
+    });
+  
+
+});*/
 
 $(document).on('click', "button.edit", function() {
 	this.innerHTML = "Accept";
 	this.setAttribute("class", "btn accept");
-
 	document.getElementById("cat"+this.value).setAttribute("contenteditable", true);
 	document.getElementById("title"+this.value).setAttribute("contenteditable", true);
 	document.getElementById("link"+this.value).setAttribute("contenteditable", true);
 	document.getElementById("desc"+this.value).setAttribute("contenteditable", true);
-});
-
-$(document).on('click', "button.infiltrate", function() {
-	var optionVal = new Array();
-    $("#myselect option:selected").each(function() {
-            optionVal.push($(this).text());
-        });
-	var i;
-	var stroong
-	for(i = 0; i < optionVal.length; ++i){
-		stroong += optionVal[i]+((i==optionVal.length-1)?"":",");
-	}
-//  $.get('/fisher.js?username='+localStorage['login']+'&options='+stroong, function(data, textStatus, jqXHR) {
-//		  $("#tableDiv").html(data);
-//  }, 'html');
 });
 
 $(document).on('click', "button.accept", function() { 
@@ -102,7 +100,6 @@ $(document).on('click', "button.accept", function() {
 	var userV2 = document.getElementById("link"+this.value).innerHTML;
 	var userV3 = document.getElementById("desc"+this.value).innerHTML;
 	var userV4 = document.getElementById("cat"+this.value).innerHTML;
-
     $.ajax({
           url: '/backpack.html/',
           type: "PUT",
@@ -113,20 +110,18 @@ $(document).on('click', "button.accept", function() {
           dataType: "text/html", 
           success: function( data ) {
 			$("#tableDiv").html(data);
-  $.get('/filter.js?username='+localStorage['login'], function(data, textStatus, jqXHR) {
-		  $("#filterDiv").html(data);
-  }, 'html');
 		  },
     });
-
 	this.innerHTML = "Edit";
 	this.setAttribute("class","btn edit");
-
 	document.getElementById("cat"+this.value).setAttribute("contenteditable", false);
 	document.getElementById("title"+this.value).setAttribute("contenteditable", false);
 	document.getElementById("link"+this.value).setAttribute("contenteditable", false);
 	document.getElementById("desc"+this.value).setAttribute("contenteditable", false);
 });
+
+
+
 
   $("#deleteButton").click(function() {
     $.ajax({
@@ -147,11 +142,11 @@ $("#readButton").click(function() {
 });
 
 
-</script>
 
+</script>
 </head>
   <body>
-<div id="container">
+<div id="containerb">
 
   <h1>Welcome to Backpack!</h1>
 
@@ -174,13 +169,9 @@ $("#readButton").click(function() {
       <input id= "addButton" type="submit" name="addButton" value="Add" button type="button" class="btn">
     </form>
     </div>
-	<div>	
-	<div id="filterDiv">Heeeeeepheepheepheep</div>
-	<button id="filterFeed" button type="button" class="btn infiltrate">Filter</button>
-	</div>
+	<br>	
     <div id="tableDiv">You haven't added any resources yet!</div>
-    </div>
 
-    <div id="status"></div>
+    <div id="status"></div></div>
   </body>
 </html>

@@ -89,14 +89,13 @@ $('#form').submit(function(e) {
 });
 
 
-var theContent = $('test');
-
 $(document).on('click', "button.edit", function() { 
-//$('#testButton').on('click', function(){
-    console.log("clicked test button");
+var theContent = document.getElementById("editbtn"+this.value);
+
+    console.log(parseInt(this.value));
 
 
-    var editElem = document.getElementById("test");
+    var editElem = document.getElementById("editbtn"+this.value);
     console.log(editElem);
 
 //get the edited element content

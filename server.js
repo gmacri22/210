@@ -97,7 +97,7 @@ app.get('/backpack.html/*', function(req, res) {
       var i;
       for(i=0; i<rows.length; i++){
 table = table.concat("<tr> <td contenteditable=\"true\"> <a href=\""+rows[i].link+"\">"+rows[i].title+"</a> </td><td contenteditable=\"true\">"+rows[i].body+"</td>"); 
-table = table.concat("<td><button value = "+rows[i].id+" type=\"button\" class=\"btn edit\"> Edit </button></td>");
+table = table.concat("<td><button id = editbtn"+rows[i].id+" value = "+rows[i].id+" type=\"button\" class=\"btn edit\"> Edit </button></td>");
 table = table.concat("<td><button value = "+rows[i].id+" type=\"button\" class=\"btn del\"> Delete </button></td></tr>");
       }
       table = table.concat("</table>");
@@ -120,7 +120,7 @@ app.post('/backpack.html', function (req, res) {
       var i;
       for(i=0; i<rows.length; i++){
 table = table.concat("<tr> <td contenteditable=\"true\"> <a href=\""+rows[i].link+"\">"+rows[i].title+"</a> </td><td contenteditable=\"true\">"+rows[i].body+"</td>"); 
-table = table.concat("<td><button value = "+rows[i].id+" type=\"button\" class=\"btn edit\"> Edit </button></td>");
+table = table.concat("<td><button id = editbtn"+rows[i].id+" value = "+rows[i].id+" type=\"button\" class=\"btn edit\"> Edit </button></td>");
 table = table.concat("<td><button value = "+rows[i].id+" type=\"button\" class=\"btn del\"> Delete </button></td></tr>");
       }
       table = table.concat("</table>");
@@ -128,20 +128,23 @@ table = table.concat("<td><button value = "+rows[i].id+" type=\"button\" class=\
   });
   usrdb.close();
 });
-/*
+
 app.put('/backpack.html/*', function(req, res) {
     console.log(req.params[0]);
     var text = req.params[0].split("&");
     var stuff = text[0];
     var username = text[1];
-    var id = text[2];
+    var idToChange = text[2];
     var usrdb = new sqlite3.Database('static_files/users/'+username+'/posts.db');
-    usrdb.run('UPDATE posts SET  
+    usrdb.run('UPDATE posts SET title = \'' + stuff + '\'WHERE id = \''+ idToChange+'\'', function(err, row){
+
+    });
 
     
     res.send('OK');
 });
-*/
+
+
 app.delete('/backpack.html', function (req, res) {
   var idToDelete = req.body.id;
   var username = req.body.username;
@@ -153,7 +156,7 @@ app.delete('/backpack.html', function (req, res) {
       var i;
       for(i=0; i<rows.length; i++){
 table = table.concat("<tr> <td contenteditable=\"true\"> <a href=\""+rows[i].link+"\">"+rows[i].title+"</a> </td><td contenteditable=\"true\">"+rows[i].body+"</td>"); 
-table = table.concat("<td><button value = "+rows[i].id+" type=\"button\" class=\"btn edit\"> Edit </button></td>");
+table = table.concat("<td><button id = editbtn"+rows[i].id+ " value = "+rows[i].id+" type=\"button\" class=\"btn edit\"> Edit </button></td>");
 table = table.concat("<td><button value = "+rows[i].id+" type=\"button\" class=\"btn del\"> Delete </button></td></tr>");
       }
       table = table.concat("</table>");

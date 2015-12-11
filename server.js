@@ -112,12 +112,22 @@ app.post('/login', function (req, res) {
   
 
   var usrdb = new sqlite3.Database(usr);
-  usrdb.run('CREATE TABLE posts (id INTEGER PRIMARY KEY, title TEXT, link TEXT, body text) ');
+  usrdb.run('CREATE TABLE posts (id INTEGER PRIMARY KEY, category TEXT, title TEXT, link TEXT, body text) ');
   usrdb.close();
   
   db.run('INSERT INTO users (username,password) VALUES (?,?)',
 	[myName,myPassword]);
 
+  res.send('OK');
+});
+
+app.put('/login/*', function (req, res) {
+  var userToLookup = req.params[0].split("&"); 
+  var nameToLookup = userToLookup[0];
+  var newPassword = userToLookup[1];
+  console.log(nameToLookup);
+  console.log(newPassword);
+  db.run("UPDATE users SET password = ? WHERE username = ?",[newPassword,nameToLookup]);
   res.send('OK');
 });
 
@@ -129,9 +139,10 @@ app.get('/backpack.html/*', function(req, res) {
 	  var table = "<table>";
       var i;
       for(i=0; i<rows.length; i++){
-table = table.concat("<tr> <td id=title"+rows[i].id+" contenteditable=\"true\">" 
-	+rows[i].title+"</td><td id=link"+rows[i].id+" contenteditable=\"true\">"
-	+rows[i].link+"</td><td id=desc"+rows[i].id+" contenteditable=\"true\">"
+table = table.concat("<tr> <td id = cat"+rows[i].id+" contenteditable\"false\">"
+	+rows[i].category+"</td><td id=title"+rows[i].id+" contenteditable=\"false\">" 
+	+rows[i].title+"</td><td id=link"+rows[i].id+" contenteditable=\"false\">"
+	+rows[i].link+"</td><td id=desc"+rows[i].id+" contenteditable=\"false\">"
 	+rows[i].body+"</td>"); 
 table = table.concat("<td><button id = editbtn"+rows[i].id+" value = "
 	+rows[i].id+" type=\"button\" class=\"btn edit\"> Edit </button></td>");
@@ -146,20 +157,22 @@ table = table.concat("<td><button value = "
 
 app.post('/backpack.html', function (req, res) {
   var postbody = req.body;
+  var cat = req.body.category;
   var title = postbody.title;
   var link = postbody.link;
   var body = postbody.body;
   var username = postbody.secretUsername;
   console.log('Adding something to database');
   var usrdb = new sqlite3.Database('static_files/users/'+username+'/posts.db');
-  usrdb.run("INSERT INTO posts (title, link, body) VALUES (?, ?, ?)", [title, link, body]);
+  usrdb.run("INSERT INTO posts (category, title, link, body) VALUES (?, ?, ?, ?)", [cat, title, link, body]);
   usrdb.all('SELECT * FROM posts', function(err, rows){
 	  var table = "<table>";
       var i;
       for(i=0; i<rows.length; i++){
-table = table.concat("<tr> <td id=title"+rows[i].id+" contenteditable=\"true\">" 
-	+rows[i].title+"</td><td id=link"+rows[i].id+" contenteditable=\"true\">"
-	+rows[i].link+"</td><td id=desc"+rows[i].id+" contenteditable=\"true\">"
+table = table.concat("<tr> <td id = cat"+rows[i].id+" contenteditable\"false\">"
+	+rows[i].category+"</td><td id=title"+rows[i].id+" contenteditable=\"false\">" 
+	+rows[i].title+"</td><td id=link"+rows[i].id+" contenteditable=\"false\">"
+	+rows[i].link+"</td><td id=desc"+rows[i].id+" contenteditable=\"false\">"
 	+rows[i].body+"</td>"); 
 table = table.concat("<td><button id = editbtn"+rows[i].id+" value = "
 	+rows[i].id+" type=\"button\" class=\"btn edit\"> Edit </button></td>");
@@ -174,15 +187,16 @@ table = table.concat("<td><button value = "
 
 app.put('/backpack.html/', function(req, res) {
     var usrdb = new sqlite3.Database('static_files/users/'+req.body.username+'/posts.db');
-    usrdb.run("UPDATE posts SET title = ?, link = ?, body = ? WHERE id = ?",
-		[req.body.title,req.body.link, req.body.desc, req.body.id]); 
+    usrdb.run("UPDATE posts SET category = ?, title = ?, link = ?, body = ? WHERE id = ?",
+		[req.body.category, req.body.title, req.body.link, req.body.desc, req.body.id]); 
   usrdb.all('SELECT * FROM posts', function(err, rows){
 	  var table = "<table>";
       var i;
       for(i=0; i<rows.length; i++){
-table = table.concat("<tr> <td id=title"+rows[i].id+" contenteditable=\"true\">" 
-	+rows[i].title+"</td><td id=link"+rows[i].id+" contenteditable=\"true\">"
-	+rows[i].link+"</td><td id=desc"+rows[i].id+" contenteditable=\"true\">"
+table = table.concat("<tr> <td id = cat"+rows[i].id+">"+rows[i].category+"</td><td id=title"
+	+rows[i].id+" contenteditable=\"false\">" 
+	+rows[i].title+"</td><td id=link"+rows[i].id+" contenteditable=\"false\">"
+	+rows[i].link+"</td><td id=desc"+rows[i].id+" contenteditable=\"false\">"
 	+rows[i].body+"</td>"); 
 table = table.concat("<td><button id = editbtn"+rows[i].id+" value = "
 	+rows[i].id+" type=\"button\" class=\"btn edit\"> Edit </button></td>");
@@ -206,9 +220,10 @@ app.delete('/backpack.html', function (req, res) {
 	  var table = "<table>";
       var i;
       for(i=0; i<rows.length; i++){
-table = table.concat("<tr> <td id=title"+rows[i].id+" contenteditable=\"true\">" 
-	+rows[i].title+"</td><td id=link"+rows[i].id+" contenteditable=\"true\">"
-	+rows[i].link+"</td><td id=desc"+rows[i].id+" contenteditable=\"true\">"
+table = table.concat("<tr> <td>"+rows[i].category+"</td><td id=title"
+	+rows[i].id+" contenteditable=\"false\">" 
+	+rows[i].title+"</td><td id=link"+rows[i].id+" contenteditable=\"false\">"
+	+rows[i].link+"</td><td id=desc"+rows[i].id+" contenteditable=\"false\">"
 	+rows[i].body+"</td>"); 
 table = table.concat("<td><button id = editbtn"+rows[i].id+" value = "
 	+rows[i].id+" type=\"button\" class=\"btn edit\"> Edit </button></td>");
@@ -221,7 +236,49 @@ table = table.concat("<td><button value = "
   usrdb.close();
 });
 
+app.get('/filter.js*', function(req, res) {
+	var usrdb = new sqlite3.Database('static_files/users/'+req.query.username+'/posts.db');
+	
+	usrdb.all("SELECT DISTINCT category FROM posts", function(err, rows) {
+		var filter = "<form role=\"form\"> <label for=\"sel1\"></label>"
+			+ "<select multiple class=\"form-control\" id=\"sel1\">";
+        for(i = 0; i < rows.length; ++i){
+			filter = filter + "<option>"+rows[i].category+"</option>"
+			console.log(rows[i].category);
+		}
+		filter = filter + "</select></form>";
+		res.send(filter); 
+	});
+});
 
+app.get('/fisher.js*', function(req, res) {
+	var username = req.query.username;
+	var filters = req.query.options.split(",");
+
+	console.log(username);
+	console.log(filters[0]);
+
+	var usrdb = new sqlite3.Database('static_files/users/'+req.query.username+'/posts.db');
+  usrdb.all('SELECT * FROM posts WHERE category IN ?',filters, function(err, rows){
+	  var table = "<table>";
+      var i;
+      for(i=0; i<rows.length; i++){
+table = table.concat("<tr> <td id = cat"+rows[i].id+" contenteditable\"false\">"
+	+rows[i].category+"</td><td id=title"+rows[i].id+" contenteditable=\"false\">" 
+	+rows[i].title+"</td><td id=link"+rows[i].id+" contenteditable=\"false\">"
+	+rows[i].link+"</td><td id=desc"+rows[i].id+" contenteditable=\"false\">"
+	+rows[i].body+"</td>"); 
+table = table.concat("<td><button id = editbtn"+rows[i].id+" value = "
+	+rows[i].id+" type=\"button\" class=\"btn edit\"> Edit </button></td>");
+table = table.concat("<td><button value = "
+	+rows[i].id+" type=\"button\" class=\"btn del\"> Delete </button></td></tr>");
+      }
+      table = table.concat("</table>");
+	  res.send(table);
+  });
+  usrdb.close();
+	res.send("<h1>PENIS</h1>");
+});
 // READ profile data for a user
 
 app.get('/users/*', function (req, res) {
@@ -237,8 +294,6 @@ app.get('/users/*', function (req, res) {
   //res.send('{}'); // failed, so return an empty JSON object!
 });
 
-
-
 // DELETE a user
 
 app.delete('/users/*', function (req, res) {
@@ -251,35 +306,39 @@ app.delete('/users/*', function (req, res) {
   res.send('OK');
 });
 
+app.get('/people', function (req, res) {
+  db.all('SELECT * FROM users', function(err, rows){
+      var table = "<table>";
+      var i;
+      for(i=0; i<rows.length; i++){
+        table = table.concat("<tr><td><a href=\"userpage.html?name="+rows[i].username+"\">" + rows[i].username + "</a></td></tr>");
+      }
+      table = table.concat("</table>");
+	  res.send(table);
+  });
 
-
-app.put('/login/*', function (req, res) {
-  var userToLookup = req.params[0].split("&"); 
-  var nameToLookup = userToLookup[0];
-  var newPassword = userToLookup[1];
-  console.log(nameToLookup);
-  console.log(newPassword);
-  db.run('UPDATE users SET password = \''+newPassword+'\' WHERE username = \'' + nameToLookup+'\'', function(err, row){
-
-   });
-  res.send('OK');
 });
 
+app.get('/userpage*', function (req, res) {
+  var usrdb = new sqlite3.Database('static_files/users/'+req.query.name	+'/posts.db');
 
+usrdb.all('SELECT * FROM posts', function(err, rows){
+	  var table = "<table>";
+      var i;
+      for(i=0; i<rows.length; i++){
+table = table.concat("<tr> <td id=title"+rows[i].id+">" 
+	+rows[i].title+"</td><td id=link"+rows[i].id+">"
+	+rows[i].link+"</td><td id=desc"+rows[i].id+">"
+	+rows[i].body+"</td>"); 
+      }
+      table = table.concat("</table>");
+	  res.send(table);
+  });
+  usrdb.close();
+});
 
 // start the server on http://localhost:3000/
 var server = app.listen(3000, function () {
   var port = server.address().port;
   console.log('Server started at http://localhost:%s/', port);
 });
-
-
-
-
-
-
-
-
-
-
-

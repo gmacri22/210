@@ -1,40 +1,74 @@
+/*
+ * Gianna Macri, Mario Natalino
+ * Backpack server code
+ */
+
+// Declarations
+
+// For http server and routing
 var express = require('express');
 var app = express();
+
+// For file i/o, making sure user database exists
 
 var fs = require("fs");
 var file = "users.db";
 var exists = fs.existsSync(file);
 
+
+// For managing databases, namely users.db
+
 var sqlite3 = require("sqlite3").verbose();
 var db = new sqlite3.Database(file);
-
 if(!exists){
   console.log("creating db file");
   fs.openSync(file, "w");
 }
 
-// required to support parsing of POST request bodies
+// For parsing of POST request bodies
 var bodyParser = require('body-parser');
 app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 
-// put all of your static files (e.g., HTML, CSS, JS, JPG) in the static_files/
-// sub-directory, and the server will serve them from there. e.g.,:
-//
-// http://localhost:3000/fakebook.html
-// http://localhost:3000/cat.jpg
-//
-// will send the file static_files/cat.jpg to the user's Web browser
+// Location of static files
 app.use(express.static('static_files'));
 
+function generateTable(username, filterlist){
+  var usrdb = new sqlite3.Database('static_files/users/'+username+'/posts.db');
+  usrdb.all('SELECT * FROM posts', function(err, rows){
+      var table = "<table>";
+      var i;
+      for(i=0; i<rows.length; i++){
+        table = table.concat("<tr> <td contenteditable=\"true\">"+rows[i].title+"</td><td contenteditable=\"true\">"+rows[i].body+"</td>"); 
+table = table.concat("<td><button value = "+rows[i].id+" type=\"button\" class=\"btn edit\"> Edit </button></td>");
+table = table.concat("<td><button value = "+rows[i].id+" type=\"button\" class=\"btn del\"> Delete </button></td></tr>");
+      }
+      table = table.concat("</table>");
+      return table;
+  });
+}
 
 
-// CREATE a new user
+/************************REQUESTS TO LOGIN************************/
 
+// GET - Read - Login
+app.get('/login/*', function (req, res) {
+  var nameToLookup = req.query.username;
+  var passToLookup = req.query.password;
+  db.get('SELECT * FROM users WHERE username = ? AND password =  ?', 
+	[nameToLookup,passToLookup], function(err, row){
+   if(row===undefined){
+      res.send('{}');
+    } else {
+      res.send('{"username":"'+row.username+'", "password":"'+row.password+'"}'); 
+    }
+   });
+});
+
+// POST - Create - Create account
 app.post('/login', function (req, res) {
-  var postBody = req.body;
-  var myName = postBody.username;
-  var myPassword = postBody.password;
+  var myName = req.body.username;
+  var myPassword = req.body.password;
 
   // must have a name!
   if (!myName) {
@@ -43,14 +77,14 @@ app.post('/login', function (req, res) {
   }
 
   // check if user's name is already in database; if so, send an error
-  db.get('SELECT * FROM users WHERE username = \'' + myName+'\'', function(err, row){
+  db.get('SELECT * FROM users WHERE username = ?', myName, function(err, row){
    if(!(row===undefined)){
     res.send('ERROR'); 
-    return; // return early!
+    return;
     }
    });
 
-  //var mkdirp = require('mkdirp');
+  // Otherwise, make a posts database an entry in users database 
   fs.mkdirSync('static_files/users/'+myName+'/');
 
   var usr = "static_files/users/"+myName+"/posts.db";
@@ -62,9 +96,18 @@ app.post('/login', function (req, res) {
   usrdb.run('CREATE TABLE posts (id INTEGER PRIMARY KEY, title TEXT, body text) ');
   usrdb.close();
   
-  db.run('INSERT INTO users (username,password) VALUES (\''+myName+'\',\''+myPassword+'\')');
+  db.run('INSERT INTO users (username,password) VALUES (?,?)',
+	[myName,myPassword]]);
 
   res.send('OK');
+});
+
+/************************REQUESTS TO BACKPACK************************/
+
+app.get('/backpack.html/*', function(req, res) { 
+  var username = req.params[0];
+ 
+  generateTable(username, []);
 });
 
 app.post('/backpack.html', function (req, res) {
@@ -75,39 +118,23 @@ app.post('/backpack.html', function (req, res) {
   var username = postbody.secretUsername;
   console.log('Adding something to database');
   var usrdb = new sqlite3.Database('static_files/users/'+username+'/posts.db');
-  usrdb.run('INSERT INTO posts (title, body) VALUES (\'<a href="'+link+'">'+title+'</a>\', \''+body+'\')');
-  usrdb.all('SELECT * FROM posts', function(err, rows){
-      var table = "<table>";
-      var i;
-      for(i=0; i<rows.length; i++){
-          table = table.concat("<tr> <td contenteditable=\"true\">"+rows[i].title+"</td><td contenteditable=\"true\">"+rows[i].body+"</td>"); 
-table = table.concat("<td><button value = "+rows[i].id+" type=\"button\" class=\"btn edit\"> Edit </button></td>");
-table = table.concat("<td><button value = "+rows[i].id+" type=\"button\" class=\"btn del\"> Delete </button></td></tr>");
-      }
-      table = table.concat("</table>");
-      res.send(table);
-  });
-  usrdb.close();
+  usrdb.run('INSERT INTO posts (title, body) VALUES (<a href="?">?</a>, ?)', [link,title,body]);
+  
+  generateTable(username,[]);
+
 });
 
-app.get('/backpack.html/*', function(req, res) { 
-  var username = req.params[0];
- 
-  var usrdb = new sqlite3.Database('static_files/users/'+username+'/posts.db');
-  usrdb.all('SELECT * FROM posts', function(err, rows){
-      var table = "<table>";
-      var i;
-      for(i=0; i<rows.length; i++){
-        table = table.concat("<tr> <td contenteditable=\"true\">"+rows[i].title+"</td><td contenteditable=\"true\">"+rows[i].body+"</td>"); 
-table = table.concat("<td><button value = "+rows[i].id+" type=\"button\" class=\"btn edit\"> Edit </button></td>");
-table = table.concat("<td><button value = "+rows[i].id+" type=\"button\" class=\"btn del\"> Delete </button></td></tr>");
-      }
-      table = table.concat("</table>");
-      res.send(table);
-  });
-  
-  usrdb.close();
+app.put('/backpack.html/*', function(req, res) {
+    console.log(req.params[0]);
+    var text = req.params[0].split("&");
+    var stuff = text[0];
+    var username = text[1];
+    var id = text[2];
+    var usrdb = new sqlite3.Database('static_files/users/'+username+'/posts.db');
+    usrdb.run('UPDATE posts SET  
 
+    
+    res.send('OK');
 });
 
 app.delete('/backpack.html', function (req, res) {
@@ -148,19 +175,6 @@ app.get('/users/*', function (req, res) {
   //res.send('{}'); // failed, so return an empty JSON object!
 });
 
-app.get('/login/*', function (req, res) {
-  var userToLookup = req.params[0].split("&"); 
-  var nameToLookup = userToLookup[0];
-  var passToLookup = userToLookup[1];
-  db.get('SELECT * FROM users WHERE username = \'' + nameToLookup+'\' AND password =  \''+ passToLookup + '\'', function(err, row){
-   if(row===undefined){
-      res.send('{}');
-    } else {
-      res.send('{"username":"'+row.username+'", "password":"'+row.password+'"}'); 
-    }
-   });
-  //res.send('{}'); // failed, so return an empty JSON object!
-});
 
 
 // DELETE a user
@@ -175,18 +189,6 @@ app.delete('/users/*', function (req, res) {
   res.send('OK');
 });
 
-app.put('/backpack.html/*', function(req, res) {
-    console.log(req.params[0]);
-    var text = req.params[0].split("&");
-    var stuff = text[0];
-    var username = text[1];
-    var id = text[2];
-    var usrdb = new sqlite3.Database('static_files/users/'+username+'/posts.db');
-    usrdb.run('UPDATE posts SET 
-
-    
-    res.send('OK');
-});
 
 
 app.put('/login/*', function (req, res) {

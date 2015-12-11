@@ -1,135 +1,63 @@
 <html>
 <head>
 <title>Backpack Login</title>
-<style type="text/css">
-	h1 {
-	    font-size: 50px;
-	    font-family: arial;
-            text-align: center;
-            color: #4d4d4d;
-	}
-        #status {
-            color: #ffffff;
-        }
-        #container {
-            background-color: lightblue;
-            height: 300px;
-        }
-        body {
-            background-color: #4d4d4d;
-        }
-       #left {
-            padding: 15px;
-            border: 10px solid darkcyan;
-            margin: 15px;
-            background-color: azure;
-            width: 250px;
-            height: 70px;
-            float: left;
-        }
-       #create {
-            padding: 15px;
-            border: 10px solid darkcyan;
-            margin: 15px;
-            background-color: azure;
-            width: 150px;
-            height: 70px;
-            float: left;
-            margin-left: 20px;
-       }
 
-       #right {
-            padding: 15px;
-            border: 10px solid darkcyan;
-            margin: 15px;
-            background-color: azure;
-            width: 550px;
-            height: 100px;
-            margin-left: 580px;
-       }
-        .btn {
-            -webkit-border-radius: 3;
-            -moz-border-radius: 3;
-            border-radius: 3px;
-            background: #4d4d4d;
-            font-family: Arial;
-            color: #ffffff;
-            border: solid #ffffff 1px;
-            font-size: 12px;
-            padding: 4px 8px 4px 8px;
-            text-decoration: none;
-        }
-        .btn:hover {
-            background: #a6a6a6;
-            text-decoration: none;
-       }
-
-</style>
-
-
+<link rel="stylesheet" type="text/css" href="goddamnedstyle.css">
 
 <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
 
 <script type="text/javascript">
+
+// Redirect: You can't log in if you're logged in.
 
 if(localStorage['login'] != undefined){
     window.location.replace("http://localhost:3000/backpack.html");
 }
 
 $(document).ready(function() {
-  // define a generic Ajax error handler:
-  // http://api.jquery.com/ajaxerror/
   $(document).ajaxError(function() {
     alert("Sorry, there was a problem!");
   });
-  $("#createButton").click(function() {
-    $.ajax({
-      // The URL for the request -- note the simple REST API!
-      // all URLs are relative to http://localhost:3000/
-      url: "login/",
-      type: "POST",
-      dataType : "text", // this URL returns a plain text string, not JSON
-      data : { username: $("#nameBox").val(),
-               password: $("#passwordBox").val()
-             },
-      success: function( data ) {
-        console.log("You received some data!", data);
-        window.location.replace("http://localhost:3000/createaccount.html");
-      },
-    });
-  });
+  
   $("#loginButton").click(function() {
-    // From: http://learn.jquery.com/ajax/jquery-ajax-methods/
-    // Using the core $.ajax() method
     $.ajax({
-      // The URL for the request -- note the simple REST API!
-      // all URLs are relative to http://localhost:3000/
-      url: "login/" + $("#nameBox").val() + "&"+$("#passwordBox").val(),
+      url: "login/?username=" + $("#nameBox").val() +
+		   "&password="+$("#passwordBox").val(),
       type: "GET",
       dataType : "json", // this URL returns data in JSON format
-      success: function( data ) {
+      success: function(data) {
         console.log("You received some data!", data);
         if (data.username && data.password) {
-
           localStorage['login'] = data.username;
-
           window.location.replace("http://localhost:3000/backpack.html");
         } else {
           $("#status").html("Error: could not find user!");
         }
       },
     });
-
+  });
+ 
+  $("#createButton").click(function() {
+    $.ajax({
+      url: "login/",
+      type: "POST",
+      dataType : "text", // this URL returns a plain text string, not JSON
+      data : { username: $("#nameBox").val(),
+               password: $("#passwordBox").val()
+             },
+      success: function(data) {
+        window.location.replace("http://localhost:3000/createaccount.html");
+      },
+    });
   });
 });
 </script>
-
 </head>
+
   <body>
  
-
-   <div id="container">
- <h1>Backpack</h1>
+  <div id="containerc">
+  <h1>Backpack</h1>
       <div id="left">
         Username: <input id="nameBox" type="text" size="20"/>
         Password: <input id="passwordBox" type="text" size="20"/>
@@ -145,8 +73,6 @@ $(document).ready(function() {
       </div>
     </div>
 
-   
-
-    <div id="status">            </div>
+    <div id="status"> </div>
   </body>
 </html>

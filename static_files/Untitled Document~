@@ -1,0 +1,155 @@
+$(document).on('click', "button.edit", function() { 
+var theContent = $('test');
+
+    console.log(parseInt(this.value));
+
+
+    var editElem = document.getElementById("test");
+    console.log(editElem);
+
+//get the edited element content
+    var userVersion = editElem.innerHTML;
+    console.log(userVersion);
+
+
+    $.ajax({
+          url: '/backpack.html/' + userVersion + "&" + localStorage['login'] + "&" + parseInt(this.value),
+          type: "PUT",
+          dataType : "text", // this URL returns a plain text string, not JSON
+          success: function( data ) {
+              console.log("You received some data!", data);
+              if (data == 'OK') {
+                  console.log("userVersion " + userVersion);
+                  
+          
+              } else {
+                  console.log("uhhh something bad happened");
+              }
+          },
+    });
+  
+
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        a.selected {
+            background-color:#1F75CC;
+            color:white;
+            z-index:100;
+        }
+
+        .messagepop {
+            background-color:#FFFFFF;
+            border:1px solid #999999;
+            cursor:default;
+            display:none;
+            margin-top: 15px;
+            position:absolute;
+            text-align:left;
+            width:394px;
+            z-index:50;
+            padding: 25px 25px 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 3px;
+            padding-left: 15px;
+            text-indent: -15px;
+        }
+
+        .messagepop p, .messagepop.div {
+            border-bottom: 1px solid #EFEFEF;
+            margin: 8px 0;
+            padding-bottom: 8px;
+        }
+
+
+
+
+
+
+
+<div class="messagepop pop">
+  <form method="put" id="update_resource" action="/backpack.html">
+    <p><label for="title">New title</label><input type="text" size="30" name="newtitle" id="newtitle" /></p>
+    <p><label for="link">New link</label><input type="text" size="30" name="newlink" id="newlink" /></p>
+    <p><label for="body">New description</label><input type="text" size="30" name="newbody" id="newbody" /></p>
+    <p><button value = "+rows[i].id+" type=\"button\" class=\"btn edit\"> Edit </button> or <a class="close" href="/">Cancel</a></p>
+  </form>
+</div>
+
+<a href="/edit" id="edit">
+   <button button type="button" class = "edit"> Edit </button>
+</a>
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+function deselect(e) {
+  $('.pop').slideFadeToggle(function() {
+    e.removeClass('selected');
+  });    
+}
+
+$(function() {
+  $('#edit').on('click', function() {
+    
+    if($(this).hasClass('selected')) {
+      deselect($(this));               
+    } else {
+      $(this).addClass('selected');
+      $('.pop').slideFadeToggle();
+    }
+    return false;
+  });
+
+  $('.close').on('click', function() {
+    deselect($('#edit'));
+    return false;
+  });
+});
+
+$.fn.slideFadeToggle = function(easing, callback) {
+  return this.animate({ opacity: 'toggle', height: 'toggle' }, 'fast', easing, callback);
+};
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -1,0 +1,114 @@
+	h1 {
+	    font-size: 50px;
+	    font-family: arial;
+            text-align: center;
+            color: #4d4d4d;
+	}
+        a {
+            color: lightblue;
+        }
+        body {
+            background-color: #4d4d4d;
+        }
+        #containerb {
+            background-color: lightblue;
+            height: 665px;
+        }
+        #containerc {
+            background-color: lightblue;
+            height: 300px;
+        }
+       #left {
+            padding: 15px;
+            border: 10px solid darkcyan;
+            margin: 15px;
+            background-color: azure;
+            width: 250px;
+            height: 70px;
+            float: left;
+        }
+       #create {
+            padding: 15px;
+            border: 10px solid darkcyan;
+            margin: 15px;
+            background-color: azure;
+            width: 150px;
+            height: 70px;
+            float: left;
+            margin-left: 20px;
+       }
+       #right {
+            padding: 15px;
+            border: 10px solid darkcyan;
+            margin: 15px;
+            background-color: azure;
+            width: 550px;
+            height: 100px;
+            margin-left: 580px;
+       }
+       #info {
+            padding: 15px;
+            border: 10px solid darkcyan;
+            margin: 15px;
+            background-color: azure;
+            width: 250px;
+            height: 80px;
+            float: left;
+            margin-left: 500px;
+        }
+        #form {
+            padding: 15px;
+            border: 10px solid darkcyan;
+            margin: 15px;
+            background-color: azure;
+            width: 470px;
+            height: 90px;
+            float: left;
+        }
+        #buttons {
+            padding: 15px;
+            border: 10px solid darkcyan;
+            margin: 15px;
+            background-color: azure;
+            width: 150px;
+            height: 90px;
+            float: left;
+            margin-left: 20px;
+        }
+        #password {
+            padding: 15px;
+            border: 10px solid darkcyan;
+            margin: 15px;
+            background-color: azure;
+            width: 470px;
+            height: 40px;
+            float: center;
+            margin-left: 350px;
+        }
+        table, th, td {
+            padding: 5px;
+        }
+        th {
+            background-color: darkcyan;
+            color: white;
+        }
+        td {
+            background-color: #4d4d4d;
+            color: white;
+        }
+        .btn {
+            -webkit-border-radius: 3;
+            -moz-border-radius: 3;
+            border-radius: 3px;
+            background: #4d4d4d;
+            font-family: Arial;
+            color: #ffffff;
+            border: solid #ffffff 1px;
+            font-size: 12px;
+            padding: 4px 8px 4px 8px;
+            text-decoration: none;
+        }
+        .btn:hover {
+            background: #a6a6a6;
+            text-decoration: none;
+       }

@@ -1,0 +1,160 @@
+<html>
+<head>
+<title>Backpack</title>
+<link rel="stylesheet" type=="text/css" href="goddamnedstyle.css">
+
+<script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+<script type="text/javascript">
+
+if(localStorage['login'] == undefined){
+    window.location.replace("http://localhost:3000/login.html");
+}
+
+$(document).ready(function() {
+  $("#welcomeDiv").html("Hello, "+ localStorage['login']);
+  $("#secretUsername").attr("value", localStorage['login']);
+
+  $.get('/backpack.html/?username='+localStorage['login'], function(data, textStatus, jqXHR) {
+          $("#tableDiv").html(data);
+  }, 'html');
+
+
+$(document).on('click', "button.del", function() {
+    $.ajax({
+        url: "/backpack.html",
+        type: "DELETE",
+        data: {username:localStorage['login'], id:parseInt(this.value)}, 
+        dataType: "html",
+        success: function (data ) {
+            $("#tableDiv").html(data);
+        }
+    });
+});
+
+
+  $(document).ajaxError(function() {
+    //alert("Sorry, there was a problem!");
+  });
+
+  $("#readButton").click(function() {
+    // From: http://learn.jquery.com/ajax/jquery-ajax-methods/
+    // Using the core $.ajax() method
+    $.ajax({
+      // The URL for the request -- note the simple REST API!
+      // all URLs are relative to http://localhost:3000/
+      url: "users/" + $("#nameBox").val(),
+      type: "GET",
+      dataType : "json", // this URL returns data in JSON format
+      success: function( data ) {
+        console.log("You received some data!", data);
+        if (data.username) {
+          $("#nameDiv").html("My name is " + data.username);
+          $("#passDiv").html("My password is " + data.password);
+        } else {
+          $("#status").html("Error: could not find user!");
+
+          $("#nameDiv").html("");
+          $("#passDiv").html("");
+        }
+      },
+    });
+  });
+  $("#updateButton").click(function() {
+        window.location.replace("http://localhost:3000/accountinfo.html");
+  });
+
+$("#logoutButton").click(function() {
+    $.ajax({
+      url: "users/" + $("#nameBox").val(),
+      type: "GET",
+      dataType : "json", // this URL returns data in JSON format
+      success: function( data ) {
+          //localStorage['login'] = undefined;
+          localStorage.clear();
+          window.location.replace("http://localhost:3000/login.html");
+      },
+    });
+  });
+
+$('#form').submit(function(e) {
+    e.preventDefault();
+    $.post('backpack.html', $('form').serialize(), function(data, textStatus, jqXHR) {
+          console.log('am i in this get thing?');
+          $("#tableDiv").html(data);
+          $("#aform")[0].reset();
+  }, 'html');
+});
+
+
+$(document).on('click', "button.edit", function() { 
+	//get the edited element content
+    var userVersion = document.getElementById("title"+this.value).innerHTML;
+	var userV2 = document.getElementById("link"+this.value).innerHTML;
+	var userV3 = document.getElementById("desc"+this.value).innerHTML;
+
+    $.ajax({
+          url: '/backpack.html/',
+          type: "PUT",
+		  contentType: 'application/json',
+		  data: "{\"title\":\""+userVersion+"\",\"link\":\""
+				+userV2+"\", \"desc\":\""+userV3+"\", \"username\":\""
+				+localStorage['login']+"\", \"id\":"+parseInt(this.value)+"}",
+          dataType: "text/html", 
+          success: function( data ) {
+			$("#tableDiv").html(data);
+		  },
+    });
+  
+
+});
+
+
+
+
+  $("#deleteButton").click(function() {
+    $.ajax({
+      url: "users/" + localStorage['login'],
+      type: "DELETE",
+      dataType : "text", // this URL returns a plain text string, not JSON
+      success: function( data ) {
+        localStorage.clear();
+        window.location.replace("http://localhost:3000/login.html");
+      },
+    });
+  });
+});
+
+
+
+</script>
+
+</head>
+  <body>
+<div id="container">
+
+  <h1>Welcome to Backpack!</h1>
+
+    <div id="buttons">
+    <button id="readButton" button type="button" class="btn">Find another user</button>
+    <button id="updateButton" button type="button" class="btn">Update my profile</button>
+    <button id="deleteButton" button type="button" class="btn">Delete my profile</button>
+    <button id ="logoutButton" button type="button" class="btn">Logout</button>
+    </div>
+
+    <div id="form">
+    Add a new resource: 
+    <form id= "aform" method="post">
+      Title: <input id="title" type="text" name="title" size="20" style="width: 100px;"/>
+      Link: <input id="link" type="text" name="link" size="20" style="width: 250px;"/> <br>
+      Description: <input id="body" type="text" name="body" size="20" style="width: 350px;"/> <br>
+      <input id = "secretUsername" type = "hidden" name="secretUsername" value="">
+      <input id= "addButton" type="submit" name="addButton" value="Add" button type="button" class="btn">
+    </form>
+    </div>
+
+    <div id="tableDiv">You haven't added any resources yet!</div>
+    </div>
+
+    <div id="status"></div>
+  </body>
+</html>

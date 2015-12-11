@@ -1,0 +1,82 @@
+<html>
+<head>
+<title>Create an account</title>
+<link rel="stylesheet" type="text/css" href="goddamnedstylesheet">
+
+<script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+
+<script type="text/javascript">
+
+
+$(document).ready(function() {
+  // define a generic Ajax error handler:
+  // http://api.jquery.com/ajaxerror/
+  $(document).ajaxError(function() {
+    alert("Sorry, there was a problem!");
+  });
+  $("#createButton").click(function() {
+    $.ajax({
+      // The URL for the request -- note the simple REST API!
+      // all URLs are relative to http://localhost:3000/
+      url: "login/",
+      type: "POST",
+      dataType : "text", // this URL returns a plain text string, not JSON
+      data : { username: $("#nameBox").val(),
+               password: $("#passwordBox").val()
+             },
+      success: function( data ) {
+        console.log("You received some data!", data);
+        if (data == 'OK') {
+          $("#status").html("Successfully created a new user!");
+          window.location.replace("http://localhost:3000/login.html");
+        } else {
+          $("#status").html("Error: could not create a new user!");
+        }
+      },
+    });
+  });
+  $("#loginButton").click(function() {
+    // From: http://learn.jquery.com/ajax/jquery-ajax-methods/
+    // Using the core $.ajax() method
+    $.ajax({
+      // The URL for the request -- note the simple REST API!
+      // all URLs are relative to http://localhost:3000/
+      url: "login/" + $("#nameBox").val() + "&"+$("#passwordBox").val(),
+      type: "GET",
+      dataType : "json", // this URL returns data in JSON format
+      success: function( data ) {
+        console.log("You received some data!", data);
+        if (data.username && data.password) {
+          $("#nameDiv").html("My name is " + data.username);
+          $("#passDiv").html("My password is " + data.password);
+
+          localStorage['login'] = data.username;
+
+          window.location.replace("http://localhost:3000/backpack.html");
+        } else {
+          $("#status").html("Error: could not find user!");
+          // clear the profile display
+        }
+      },
+    });
+
+  });
+});
+</script>
+
+</head>
+  <body>
+  <div id="container">
+  <h1>Create an account</h1>
+
+    <div id="info">
+    Username: <input id="nameBox" type="text" size="20"/> <br>
+    Password: <input id="passwordBox" type="text" size="20"/> <br>
+    <button id="createButton" button type="button" class="btn">Create an account</button>
+    </div>
+
+    </div>
+
+    <div id="status"></div>
+  </body>
+</html>

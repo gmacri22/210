@@ -118,7 +118,7 @@ app.post('/backpack.html', function (req, res) {
   var username = postbody.secretUsername;
   console.log('Adding something to database');
   var usrdb = new sqlite3.Database('static_files/users/'+username+'/posts.db');
-  usrdb.run('INSERT INTO posts (?, ?, ?) VALUES (\"<a href=\"?\">?</a>\", ?)', [title, link, body]);
+  usrdb.run("INSERT INTO posts (title, link, body) VALUES (?, ?, ?)", [title, link, body]);
   
   generateTable(username,[]);
 

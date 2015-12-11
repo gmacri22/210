@@ -14,8 +14,8 @@ $(document).ready(function() {
   $("#welcomeDiv").html("Hello, "+ localStorage['login']);
   $("#secretUsername").attr("value", localStorage['login']);
 
-  $.get('/backpack.html/'+localStorage['login'], localStorage['login'], function(data, textStatus, jqXHR) {
-          console.log('am i in this get thing?');
+  $.get('/backpack.html/?username='+localStorage['login'], function(data, textStatus, jqXHR) {
+          console.log("!!!!!!!");
           $("#tableDiv").html(data);
   }, 'html');
 

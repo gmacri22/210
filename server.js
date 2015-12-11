@@ -33,7 +33,7 @@ app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 // Location of static files
 app.use(express.static('static_files'));
 
-function generateTable(username, filterlist){
+function generateTable(response, username, filterlist){
   var usrdb = new sqlite3.Database('static_files/users/'+username+'/posts.db');
   usrdb.all('SELECT * FROM posts', function(err, rows){
       var table = "<table>";
@@ -44,7 +44,8 @@ table = table.concat("<td><button value = "+rows[i].id+" type=\"button\" class=\
 table = table.concat("<td><button value = "+rows[i].id+" type=\"button\" class=\"btn del\"> Delete </button></td></tr>");
       }
       table = table.concat("</table>");
-      return table;
+      
+      response.send(table);
   });
 }
 
@@ -104,10 +105,8 @@ app.post('/login', function (req, res) {
 
 /************************REQUESTS TO BACKPACK************************/
 
-app.get('/backpack.html/*', function(req, res) { 
-  var username = req.params[0];
- 
-  generateTable(username, []);
+app.get('/backpack.html/*', function(req, res) {
+  generateTable(res, req.query.username, []);
 });
 
 app.post('/backpack.html', function (req, res) {
@@ -120,7 +119,7 @@ app.post('/backpack.html', function (req, res) {
   var usrdb = new sqlite3.Database('static_files/users/'+username+'/posts.db');
   usrdb.run("INSERT INTO posts (title, link, body) VALUES (?, ?, ?)", [title, link, body]);
   
-  generateTable(username,[]);
+  generateTable(res, username,[]);
 
 });
 /*
@@ -143,20 +142,8 @@ app.delete('/backpack.html', function (req, res) {
   var usrdb = new sqlite3.Database('static_files/users/'+username+'/posts.db');
   console.log("DELETING "+idToDelete);
   usrdb.run('DELETE FROM posts WHERE id = ' + idToDelete);
-  usrdb.all('SELECT * FROM posts', function(err, rows){
-      var table = "<table>";
-      var i;
-      for(i=0; i<rows.length; i++){
-          table = table.concat("<tr> <td>" + rows[i].title + "</td> <td>"+rows[i].body+"</td>"); 
-table = table.concat("<td><button value = "+rows[i].id+" type=\"button\" class=\"btn edit\"> Edit </button></td>");
-table = table.concat("<td><button value = "+rows[i].id+" type=\"button\" class=\"btn del\"> Delete </button></td></tr>");
-      }
-      table = table.concat("</table>");
-      console.log("send a print");
-      res.send(table);
-  });
-
- usrdb.close();
+  
+  generateTable(res, username, []);
 });
 
 

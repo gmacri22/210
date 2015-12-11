@@ -31,6 +31,9 @@ $.ajax({
 $("#homeButton").click(function() {
   window.location.replace("http://localhost:3000/backpack.html");
 });
+$("#backButton").click(function() {
+  window.location.replace("http://localhost:3000/backpack.html");
+});
 });
 </script>
 
@@ -40,7 +43,9 @@ $("#homeButton").click(function() {
 <h1> Posts </h1>
     
     <div id="postsTable">This user has no resources</div>
+<button id ="backButton" button type="button" class="btn">Back</button>
     <button id ="homeButton" button type="button" class="btn">Home</button>
-
+    
+</div>
   </body>
 </html>

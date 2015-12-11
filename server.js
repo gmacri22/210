@@ -34,7 +34,40 @@ app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 app.use(express.static('static_files'));
 
 
+app.get('/people', function (req, res) {
+  db.all('SELECT * FROM users', function(err, rows){
+      var table = "<table>";
+      var i;
+      for(i=0; i<rows.length; i++){
+        table = table.concat("<tr><td><a href=\"userpage.html?name="+rows[i].username+"\">" + rows[i].username + "</a></td></tr>");
+      }
+      table = table.concat("</table>");
+	  res.send(table);
+  });
 
+});
+
+
+app.get('/userpage*', function (req, res) {
+  var usrdb = new sqlite3.Database('static_files/users/'+req.query.name	+'/posts.db');
+
+usrdb.all('SELECT * FROM posts', function(err, rows){
+	  var table = "<table>";
+      var i;
+      for(i=0; i<rows.length; i++){
+table = table.concat("<tr> <td id=title"+rows[i].id+">" 
+	+rows[i].title+"</td><td id=link"+rows[i].id+">"
+	+rows[i].link+"</td><td id=desc"+rows[i].id+">"
+	+rows[i].body+"</td>"); 
+      }
+      table = table.concat("</table>");
+	  res.send(table);
+  });
+  usrdb.close();
+
+
+
+});
 /************************REQUESTS TO LOGIN************************/
 
 // GET - Read - Login

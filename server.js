@@ -39,7 +39,7 @@ function generateTable(username, filterlist){
       var table = "<table>";
       var i;
       for(i=0; i<rows.length; i++){
-        table = table.concat("<tr> <td contenteditable=\"true\">"+rows[i].title+"</td><td contenteditable=\"true\">"+rows[i].body+"</td>"); 
+table = table.concat("<tr> <td contenteditable=\"true\"> <a href=\""+rows[i].link+"\">"+rows[i].title+"</a> </td><td contenteditable=\"true\">"+rows[i].body+"</td>"); 
 table = table.concat("<td><button value = "+rows[i].id+" type=\"button\" class=\"btn edit\"> Edit </button></td>");
 table = table.concat("<td><button value = "+rows[i].id+" type=\"button\" class=\"btn del\"> Delete </button></td></tr>");
       }
@@ -93,11 +93,11 @@ app.post('/login', function (req, res) {
   
 
   var usrdb = new sqlite3.Database(usr);
-  usrdb.run('CREATE TABLE posts (id INTEGER PRIMARY KEY, title TEXT, body text) ');
+  usrdb.run('CREATE TABLE posts (id INTEGER PRIMARY KEY, title TEXT, link TEXT, body text) ');
   usrdb.close();
   
   db.run('INSERT INTO users (username,password) VALUES (?,?)',
-	[myName,myPassword]]);
+	[myName,myPassword]);
 
   res.send('OK');
 });
@@ -118,12 +118,12 @@ app.post('/backpack.html', function (req, res) {
   var username = postbody.secretUsername;
   console.log('Adding something to database');
   var usrdb = new sqlite3.Database('static_files/users/'+username+'/posts.db');
-  usrdb.run('INSERT INTO posts (title, body) VALUES (<a href="?">?</a>, ?)', [link,title,body]);
+  usrdb.run('INSERT INTO posts (?, ?, ?) VALUES (\"<a href=\"?\">?</a>\", ?)', [title, link, body]);
   
   generateTable(username,[]);
 
 });
-
+/*
 app.put('/backpack.html/*', function(req, res) {
     console.log(req.params[0]);
     var text = req.params[0].split("&");
@@ -136,7 +136,7 @@ app.put('/backpack.html/*', function(req, res) {
     
     res.send('OK');
 });
-
+*/
 app.delete('/backpack.html', function (req, res) {
   var idToDelete = req.body.id;
   var username = req.body.username;

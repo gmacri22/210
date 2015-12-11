@@ -75,6 +75,16 @@
             float: left;
             margin-left: 20px;
         }
+        #password {
+            padding: 15px;
+            border: 10px solid darkcyan;
+            margin: 15px;
+            background-color: azure;
+            width: 470px;
+            height: 40px;
+            float: center;
+            margin-left: 350px;
+        }
         table, th, td {
             padding: 5px;
         }

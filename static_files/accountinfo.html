@@ -1,0 +1,103 @@
+<html>
+<head>
+<title>Update your account information</title>
+<style type="text/css">
+	h1 {
+	    font-size: 50px;
+	    font-family: arial;
+            text-align: center;
+            color: #4d4d4d;
+	}
+        body {
+            background-color: #4d4d4d;
+        }
+        #container {
+            background-color: lightblue;
+            height: 300px;
+        }
+        #password {
+            padding: 15px;
+            border: 10px solid darkcyan;
+            margin: 15px;
+            background-color: azure;
+            width: 470px;
+            height: 40px;
+            float: center;
+            margin-left: 350px;
+        }
+        .btn {
+            -webkit-border-radius: 3;
+            -moz-border-radius: 3;
+            border-radius: 3px;
+            background: #4d4d4d;
+            font-family: Arial;
+            color: #ffffff;
+            border: solid #ffffff 1px;
+            font-size: 12px;
+            padding: 4px 8px 4px 8px;
+            text-decoration: none;
+        }
+        .btn:hover {
+            background: #a6a6a6;
+            text-decoration: none;
+       }
+
+</style>
+
+<script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+
+<script type="text/javascript">
+if(localStorage['login'] == undefined){
+    window.location.replace("http://localhost:3000/login.html");
+}
+
+$(document).ready(function() {
+  // define a generic Ajax error handler:
+  // http://api.jquery.com/ajaxerror/
+  $(document).ajaxError(function() {
+    alert("Sorry, there was a problem!");
+  });
+  $("#updateButton").click(function() {
+    $.ajax({
+      // The URL for the request -- note the simple REST API!
+      // all URLs are relative to http://localhost:3000/
+      url: "login/" + localStorage['login']+ "&"+$("#passwordBox").val(),
+      type: "PUT",
+      dataType : "text", // this URL returns a plain text string, not JSON
+      data : { username: $("#nameBox").val(),
+               password: $("#passwordBox").val()
+             },
+      success: function( data ) {
+        console.log("You received some data!", data);
+        if (data == 'OK') {
+
+          window.location.replace("http://localhost:3000/backpack.html");
+        } else {
+          $("#status").html("Error: could not update information!");
+        }
+      },
+    });
+  });
+});
+
+</script>
+
+</head>
+  <body>
+  <div id="container">
+  <h1>Update your account information</h1>
+
+    <div id="password">
+    New Password: <input id="passwordBox" type="text" size="20"/>
+    <button id="updateButton" button type="button" class="btn">Update Information</button>
+    </div>
+
+    <!-- empty placeholders -->
+    <div id="nameDiv"></div>
+    <div id="passDiv"></div>
+
+    </div>
+
+    <div id="status"></div>
+  </body>
+</html>
